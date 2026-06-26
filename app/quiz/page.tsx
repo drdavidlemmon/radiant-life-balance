@@ -156,7 +156,7 @@ export default function QuizPage() {
               How true is the following for you right now?
             </p>
             <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-10">
-              "{q.question}"
+              &ldquo;{q.question}&rdquo;
             </h2>
 
             <div className="space-y-2.5">

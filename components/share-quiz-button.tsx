@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Share2, Copy, Check, X, MessageCircle, Mail, Facebook } from 'lucide-react'
+import { Share2, Copy, Check, X, Mail, Facebook } from 'lucide-react'
 
 // X/Twitter SVG (not in lucide)
 function XIcon({ className }: { className?: string }) {

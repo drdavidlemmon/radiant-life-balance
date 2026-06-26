@@ -5,8 +5,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRight, ArrowLeft, Star, ExternalLink, Clock, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
-import { AreaData, QuizResults, AreaKey, Product } from '@/types'
-import { cn } from '@/lib/utils'
+import { AreaData, QuizResults, Product } from '@/types'
 
 interface Props { area: AreaData }
 
@@ -83,7 +82,7 @@ export function AreaPageClient({ area }: Props) {
                 transition={{ delay: i * 0.08 }} viewport={{ once: true }}
                 className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
                 <div className="w-4 h-0.5 rounded mb-3" style={{ background: area.color }} />
-                <p className="text-slate-600 italic text-sm leading-relaxed mb-3">"{q.text}"</p>
+                <p className="text-slate-600 italic text-sm leading-relaxed mb-3">&ldquo;{q.text}&rdquo;</p>
                 <footer className="text-slate-400 text-xs font-medium">— {q.author}</footer>
               </motion.blockquote>
             ))}
