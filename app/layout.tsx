@@ -48,6 +48,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: SITE_URL,
   },
+  verification: {
+    other: {
+      'impact-site-verification': 'f3609b86-400a-40bf-b227-ce97a212ea49',
+    },
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
