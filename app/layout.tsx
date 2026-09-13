@@ -50,7 +50,10 @@ export const metadata: Metadata = {
   },
   verification: {
     other: {
-      'impact-site-verification': 'f3609b86-400a-40bf-b227-ce97a212ea49',
+      'impact-site-verification': [
+        'f3609b86-400a-40bf-b227-ce97a212ea49',
+        '56acaac7-f692-49c4-85e5-a8732a5f20ee',
+      ],
     },
   },
 }
