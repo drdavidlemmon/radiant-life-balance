@@ -180,7 +180,7 @@ export const areasData: Record<string, AreaData> = {
         ],
         products: [
           { id: 'exp1', name: 'Strength Training Anatomy (3rd Edition)', type: 'book', description: "Frédéric Delavier's visually stunning guide showing the exact muscles activated in every exercise — the ultimate training reference used by trainers worldwide.", price: '$22.99', affiliateUrl: 'https://amzn.to/4huZs3x', rating: 4.8 },
-          { id: 'exp2', name: 'Creatine Monohydrate (5g/day)', type: 'supplement', description: 'The single most researched performance supplement in existence. Proven to increase strength, muscle mass, and cognitive performance. Safe and highly effective.', price: '$19.99', affiliateUrl: '#', rating: 4.8 },
+          { id: 'exp2', name: 'Creatine Monohydrate (5g/day)', type: 'supplement', description: 'The single most researched performance supplement in existence. Proven to increase strength, muscle mass, and cognitive performance. Safe and highly effective.', price: '$19.99', affiliateUrl: 'https://www.amazon.com/dp/B0FFP8GBZB?niid=nl_cl_lst_a_tbl_0_0&nrid=Z03DDWCVHW5M0X1W88TG&th=1&linkCode=ll2&tag=radiantlifeba-20&linkId=0dcbdda74a40c362fd1d6fed51f71981&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl', rating: 4.8 },
         ],
       },
       {
