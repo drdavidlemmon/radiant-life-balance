@@ -273,6 +273,7 @@ export const areasData: Record<string, AreaData> = {
         products: [
           { id: 'happ1', name: 'The Happiness Advantage', type: 'book', description: "Shawn Achor's research-backed guide to how a positive brain fuels success in work and life — and the seven principles that activate happiness as a competitive edge.", price: '$16.99', affiliateUrl: '#', rating: 4.7 },
           { id: 'happ2', name: 'The Art of Happiness', type: 'book', description: 'The Dalai Lama and psychiatrist Howard Cutler explore the foundations of enduring happiness — blending ancient wisdom with modern psychology in a timeless conversation.', price: '$15.99', affiliateUrl: '#', rating: 4.7 },
+          { id: 'happ3', name: 'The Purpose Driven Life', type: 'book', description: "Rick Warren's bestselling exploration of finding meaning and direction through a life oriented around purpose greater than yourself — a foundational read on living intentionally.", price: '$16.99', affiliateUrl: 'https://amzn.to/4bYtTvi', rating: 4.7 },
         ],
       },
       {
