@@ -25,7 +25,7 @@ export const areasData: Record<string, AreaData> = {
           { text: 'An investment in knowledge pays the best interest.', author: 'Benjamin Franklin' },
         ],
         products: [
-          { id: 'lp1', name: 'Ultralearning: Master Hard Skills, Outsmart the Competition, and Accelerate Your Career', type: 'book', description: "Scott Young's proven methodology for self-directed, intense learning projects that help you master skills in record time — from programming to languages.", price: '$18.99', affiliateUrl: '#', rating: 4.7 },
+          { id: 'lp1', name: 'Ultralearning: Master Hard Skills, Outsmart the Competition, and Accelerate Your Career', type: 'book', description: "Scott Young's proven methodology for self-directed, intense learning projects that help you master skills in record time — from programming to languages.", price: '$18.99', affiliateUrl: 'https://amzn.to/4weA72j', rating: 4.7 },
           { id: 'lp2', name: 'Learning How to Learn (Coursera)', type: 'course', description: "The world's most popular online course, taught by Dr. Barbara Oakley. Science-backed techniques to improve how you learn anything, forever.", price: 'Free', affiliateUrl: '#', rating: 4.9 },
           { id: 'lp3', name: 'Make It Stick: The Science of Successful Learning', type: 'book', description: 'Cognitive scientists reveal the most effective learning strategies, many of which go against conventional wisdom about studying.', price: '$16.99', affiliateUrl: '#', rating: 4.6 },
         ],
@@ -45,7 +45,7 @@ export const areasData: Record<string, AreaData> = {
           { text: 'The palest ink is better than the best memory.', author: 'Chinese Proverb' },
         ],
         products: [
-          { id: 'mp1', name: 'Moonwalking with Einstein: The Art and Science of Remembering Everything', type: 'book', description: "Joshua Foer's journey from science reporter to US Memory Champion — packed with actionable memory techniques anyone can use.", price: '$16.99', affiliateUrl: '#', rating: 4.5 },
+          { id: 'mp1', name: 'Moonwalking with Einstein: The Art and Science of Remembering Everything', type: 'book', description: "Joshua Foer's journey from science reporter to US Memory Champion — packed with actionable memory techniques anyone can use.", price: '$16.99', affiliateUrl: 'https://amzn.to/4fty2IB', rating: 4.5 },
           { id: 'mp2', name: 'Anki — Spaced Repetition Software', type: 'course', description: 'The most powerful free flashcard system using AI-based spaced repetition algorithms to make memory stick for life. Used by medical students and language learners worldwide.', price: 'Free', affiliateUrl: '#', rating: 4.8 },
         ],
       },
@@ -64,7 +64,7 @@ export const areasData: Record<string, AreaData> = {
           { text: 'Reading is to the mind what exercise is to the body.', author: 'Joseph Addison' },
         ],
         products: [
-          { id: 'srp1', name: 'The Speed Reading Book', type: 'book', description: "Tony Buzan's comprehensive guide to doubling or tripling reading speed while maintaining or improving comprehension — the classic in the field.", price: '$15.99', affiliateUrl: '#', rating: 4.3 },
+          { id: 'srp1', name: 'The Speed Reading Book', type: 'book', description: "Tony Buzan's comprehensive guide to doubling or tripling reading speed while maintaining or improving comprehension — the classic in the field.", price: '$15.99', affiliateUrl: 'https://amzn.to/4wkQFWB', rating: 4.3 },
           { id: 'srp2', name: 'Spreeder Speed Reading App', type: 'course', description: 'The most popular speed reading training app, used by over 5 million people. Includes RSVP training, comprehension tests, and progress tracking.', price: '$9.99/month', affiliateUrl: '#', rating: 4.2 },
         ],
       },
@@ -83,8 +83,8 @@ export const areasData: Record<string, AreaData> = {
           { text: 'Concentrate all your thoughts upon the work at hand. The sun\'s rays do not burn until brought to a focus.', author: 'Alexander Graham Bell' },
         ],
         products: [
-          { id: 'fp1', name: 'Deep Work: Rules for Focused Success in a Distracted World', type: 'book', description: "Cal Newport's masterpiece on the power of concentrated focus and how to cultivate it deliberately in our age of endless distraction.", price: '$17.99', affiliateUrl: '#', rating: 4.8 },
-          { id: 'fp2', name: 'Focus Factor Brain Health Supplement', type: 'supplement', description: "America's #1 selling brain health supplement — supports memory, concentration, and focus with a clinically studied formula containing 40 key nutrients.", price: '$29.99', affiliateUrl: '#', rating: 4.1 },
+          { id: 'fp1', name: 'Deep Work: Rules for Focused Success in a Distracted World', type: 'book', description: "Cal Newport's masterpiece on the power of concentrated focus and how to cultivate it deliberately in our age of endless distraction.", price: '$17.99', affiliateUrl: 'https://amzn.to/4wkqEqt', rating: 4.8 },
+          { id: 'fp2', name: 'Focus Factor Brain Health Supplement', type: 'supplement', description: "America's #1 selling brain health supplement — supports memory, concentration, and focus with a clinically studied formula containing 40 key nutrients.", price: '$29.99', affiliateUrl: 'https://amzn.to/3RNXZLj', rating: 4.1 },
           { id: 'fp3', name: 'Brain.fm — AI Music for Focus', type: 'course', description: 'Scientifically designed music that puts your brain into states of deep focus, relaxation, or sleep within minutes using neural phase-locking technology.', price: '$6.99/month', affiliateUrl: '#', rating: 4.5 },
         ],
       },
@@ -103,8 +103,8 @@ export const areasData: Record<string, AreaData> = {
           { text: 'It is the mark of an educated mind to be able to entertain a thought without accepting it.', author: 'Aristotle' },
         ],
         products: [
-          { id: 'ctp1', name: 'Thinking, Fast and Slow', type: 'book', description: "Daniel Kahneman's Nobel Prize-winning insights into the two systems that drive the way we think — an essential guide to understanding your own mind.", price: '$17.00', affiliateUrl: '#', rating: 4.6 },
-          { id: 'ctp2', name: 'The Great Mental Models Vol. 1', type: 'book', description: "Shane Parrish's collection of the most powerful mental models from across disciplines — a toolkit for better thinking in any situation.", price: '$22.99', affiliateUrl: '#', rating: 4.7 },
+          { id: 'ctp1', name: 'Thinking, Fast and Slow', type: 'book', description: "Daniel Kahneman's Nobel Prize-winning insights into the two systems that drive the way we think — an essential guide to understanding your own mind.", price: '$17.00', affiliateUrl: 'https://amzn.to/4pE4Mnd', rating: 4.6 },
+          { id: 'ctp2', name: 'The Great Mental Models Vol. 1', type: 'book', description: "Shane Parrish's collection of the most powerful mental models from across disciplines — a toolkit for better thinking in any situation.", price: '$22.99', affiliateUrl: 'https://amzn.to/4fxjd83', rating: 4.7 },
         ],
       },
     ],
@@ -139,7 +139,7 @@ export const areasData: Record<string, AreaData> = {
           { text: "A good laugh and a long sleep are the best cures in the doctor's book.", author: 'Irish Proverb' },
         ],
         products: [
-          { id: 'slp1', name: 'Why We Sleep: Unlocking the Power of Sleep and Dreams', type: 'book', description: "Matthew Walker's revolutionary exploration of sleep — the most important book on the topic and a must-read for anyone who wants to understand and transform their sleep.", price: '$16.99', affiliateUrl: '#', rating: 4.7 },
+          { id: 'slp1', name: 'Why We Sleep: Unlocking the Power of Sleep and Dreams', type: 'book', description: "Matthew Walker's revolutionary exploration of sleep — the most important book on the topic and a must-read for anyone who wants to understand and transform their sleep.", price: '$16.99', affiliateUrl: 'https://amzn.to/4vLgJJm', rating: 4.7 },
           { id: 'slp2', name: 'Magnesium Glycinate Sleep Support (400mg)', type: 'supplement', description: 'Highly bioavailable magnesium glycinate supports deep, restorative sleep by calming the nervous system — without the grogginess of traditional sleeping aids.', price: '$24.99', affiliateUrl: '#', rating: 4.6 },
           { id: 'slp3', name: 'Manta Sleep Mask Pro', type: 'physical', description: '100% blackout sleep mask with contoured, adjustable eye cups that block all light for dramatically deeper sleep anywhere, any time.', price: '$39.99', affiliateUrl: '#', rating: 4.5 },
         ],
@@ -159,7 +159,7 @@ export const areasData: Record<string, AreaData> = {
           { text: 'The food you eat can be either the safest and most powerful form of medicine or the slowest form of poison.', author: 'Ann Wigmore' },
         ],
         products: [
-          { id: 'ntp1', name: 'Eat to Beat Disease', type: 'book', description: "Dr. William Li's groundbreaking research on how the right foods can activate your body's natural defenses to fight illness, lose weight, and maintain optimal health.", price: '$21.99', affiliateUrl: '#', rating: 4.6 },
+          { id: 'ntp1', name: 'Eat to Beat Disease', type: 'book', description: "Dr. William Li's groundbreaking research on how the right foods can activate your body's natural defenses to fight illness, lose weight, and maintain optimal health.", price: '$21.99', affiliateUrl: 'https://amzn.to/4vRBsLw', rating: 4.6 },
           { id: 'ntp2', name: 'Athletic Greens AG1 — Daily Health Drink', type: 'supplement', description: 'The comprehensive all-in-one daily drink with 75 vitamins, minerals, and whole food-sourced ingredients for foundational nutrition and energy.', price: '$79.00/month', affiliateUrl: '#', rating: 4.4 },
           { id: 'ntp3', name: 'Omega-3 Fish Oil (Triple Strength)', type: 'supplement', description: 'High-potency EPA/DHA omega-3s for brain health, heart health, reduced inflammation, and improved mood — the most universally recommended supplement.', price: '$34.99', affiliateUrl: '#', rating: 4.7 },
         ],
@@ -179,7 +179,7 @@ export const areasData: Record<string, AreaData> = {
           { text: 'Exercise is a celebration of what your body can do. Not a punishment for what you ate.', author: 'Unknown' },
         ],
         products: [
-          { id: 'exp1', name: 'Strength Training Anatomy (3rd Edition)', type: 'book', description: "Frédéric Delavier's visually stunning guide showing the exact muscles activated in every exercise — the ultimate training reference used by trainers worldwide.", price: '$22.99', affiliateUrl: '#', rating: 4.8 },
+          { id: 'exp1', name: 'Strength Training Anatomy (3rd Edition)', type: 'book', description: "Frédéric Delavier's visually stunning guide showing the exact muscles activated in every exercise — the ultimate training reference used by trainers worldwide.", price: '$22.99', affiliateUrl: 'https://amzn.to/4huZs3x', rating: 4.8 },
           { id: 'exp2', name: 'Creatine Monohydrate (5g/day)', type: 'supplement', description: 'The single most researched performance supplement in existence. Proven to increase strength, muscle mass, and cognitive performance. Safe and highly effective.', price: '$19.99', affiliateUrl: '#', rating: 4.8 },
         ],
       },
@@ -198,7 +198,7 @@ export const areasData: Record<string, AreaData> = {
           { text: 'Take care of your body. It\'s the only home you\'ll ever have to live in.', author: 'Jim Rohn' },
         ],
         products: [
-          { id: 'wtp1', name: 'The Obesity Code: Unlocking the Secrets of Weight Loss', type: 'book', description: "Dr. Jason Fung's revolutionary approach to understanding and treating obesity through insulin control and intermittent fasting. Backed by rigorous science.", price: '$16.99', affiliateUrl: '#', rating: 4.7 },
+          { id: 'wtp1', name: 'The Obesity Code: Unlocking the Secrets of Weight Loss', type: 'book', description: "Dr. Jason Fung's revolutionary approach to understanding and treating obesity through insulin control and intermittent fasting. Backed by rigorous science.", price: '$16.99', affiliateUrl: 'https://amzn.to/4c0Dxxv', rating: 4.7 },
           { id: 'wtp2', name: 'Glucomannan Appetite Control (Konjac Fiber)', type: 'supplement', description: 'Clinically proven natural fiber supplement that expands in the stomach to promote satiety and reduce caloric intake without hunger or deprivation.', price: '$21.99', affiliateUrl: '#', rating: 4.2 },
         ],
       },
@@ -218,7 +218,7 @@ export const areasData: Record<string, AreaData> = {
         ],
         products: [
           { id: 'enp1', name: 'CoQ10 + PQQ Advanced Energy Complex', type: 'supplement', description: 'Advanced mitochondrial support formula combining CoQ10 and PQQ for sustained cellular energy production, mental clarity, and cardiovascular protection.', price: '$34.99', affiliateUrl: '#', rating: 4.4 },
-          { id: 'enp2', name: 'Boundless: Upgrade Your Brain, Optimize Your Body', type: 'book', description: "Ben Greenfield's comprehensive biohacking guide covering every strategy to maximize physical and mental performance, from sleep to supplements to exercise.", price: '$35.00', affiliateUrl: '#', rating: 4.5 },
+          { id: 'enp2', name: 'Boundless: Upgrade Your Brain, Optimize Your Body', type: 'book', description: "Ben Greenfield's comprehensive biohacking guide covering every strategy to maximize physical and mental performance, from sleep to supplements to exercise.", price: '$35.00', affiliateUrl: 'https://amzn.to/4bYt8Cs', rating: 4.5 },
         ],
       },
     ],
@@ -289,8 +289,8 @@ export const areasData: Record<string, AreaData> = {
           { text: 'When you are grateful, fear disappears and abundance appears.', author: 'Tony Robbins' },
         ],
         products: [
-          { id: 'grp1', name: 'The Five Minute Journal', type: 'physical', description: "The world's most popular gratitude journal — a beautifully designed daily practice proven to increase positivity, reduce anxiety, and start and end every day with intention.", price: '$29.99', affiliateUrl: '#', rating: 4.8 },
-          { id: 'grp2', name: 'The Gratitude Diaries', type: 'book', description: "Janice Kaplan's year-long experiment trying to live more gratefully — and the surprising, research-backed ways it transformed her life, relationships, and health.", price: '$15.99', affiliateUrl: '#', rating: 4.4 },
+          { id: 'grp1', name: 'The Five Minute Journal', type: 'physical', description: "The world's most popular gratitude journal — a beautifully designed daily practice proven to increase positivity, reduce anxiety, and start and end every day with intention.", price: '$29.99', affiliateUrl: 'https://amzn.to/4gVYH3g', rating: 4.8 },
+          { id: 'grp2', name: 'The Gratitude Diaries', type: 'book', description: "Janice Kaplan's year-long experiment trying to live more gratefully — and the surprising, research-backed ways it transformed her life, relationships, and health.", price: '$15.99', affiliateUrl: 'https://amzn.to/4fle5F9', rating: 4.4 },
         ],
       },
       {
@@ -307,8 +307,8 @@ export const areasData: Record<string, AreaData> = {
           { text: 'You have power over your mind — not outside events. Realize this, and you will find strength.', author: 'Marcus Aurelius' },
         ],
         products: [
-          { id: 'ipp1', name: 'The Power of Now: A Guide to Spiritual Enlightenment', type: 'book', description: "Eckhart Tolle's transformational guide to living in the present moment and freeing yourself from the relentless tyranny of the thinking mind. A modern spiritual masterpiece.", price: '$15.99', affiliateUrl: '#', rating: 4.7 },
-          { id: 'ipp2', name: 'Meditations by Marcus Aurelius', type: 'book', description: "The private reflections of Rome's philosopher-emperor — written for himself, not for publication — remain the most practical guide to inner peace ever written.", price: '$9.99', affiliateUrl: '#', rating: 4.9 },
+          { id: 'ipp1', name: 'The Power of Now: A Guide to Spiritual Enlightenment', type: 'book', description: "Eckhart Tolle's transformational guide to living in the present moment and freeing yourself from the relentless tyranny of the thinking mind. A modern spiritual masterpiece.", price: '$15.99', affiliateUrl: 'https://amzn.to/4vOPo95', rating: 4.7 },
+          { id: 'ipp2', name: 'Meditations by Marcus Aurelius', type: 'book', description: "The private reflections of Rome's philosopher-emperor — written for himself, not for publication — remain the most practical guide to inner peace ever written.", price: '$9.99', affiliateUrl: 'https://amzn.to/3RwJhYP', rating: 4.9 },
         ],
       },
       {
@@ -325,7 +325,7 @@ export const areasData: Record<string, AreaData> = {
           { text: 'Your sacred space is where you can find yourself over and over again.', author: 'Joseph Campbell' },
         ],
         products: [
-          { id: 'spp1', name: 'The Untethered Soul: The Journey Beyond Yourself', type: 'book', description: "Michael Singer's profound exploration of consciousness, spiritual awakening, and the path to inner freedom — one of the most beloved spiritual books of the modern era.", price: '$16.99', affiliateUrl: '#', rating: 4.8 },
+          { id: 'spp1', name: 'The Untethered Soul: The Journey Beyond Yourself', type: 'book', description: "Michael Singer's profound exploration of consciousness, spiritual awakening, and the path to inner freedom — one of the most beloved spiritual books of the modern era.", price: '$16.99', affiliateUrl: 'https://amzn.to/4wlBxZ1', rating: 4.8 },
           { id: 'spp2', name: 'Insight Timer — Free Meditation App', type: 'course', description: "The world's largest free library of guided meditations with over 100,000 sessions, plus a community of 25 million meditators worldwide.", price: 'Free', affiliateUrl: '#', rating: 4.7 },
         ],
       },
@@ -360,8 +360,8 @@ export const areasData: Record<string, AreaData> = {
           { text: 'A great marriage is not when the "perfect couple" comes together. It is when an imperfect couple learns to enjoy their differences.', author: 'Dave Meurer' },
         ],
         products: [
-          { id: 'romp1', name: 'The Seven Principles for Making Marriage Work', type: 'book', description: "John Gottman's research-based guide to building a lasting, fulfilling partnership — backed by 40 years of scientific study of thousands of couples.", price: '$17.00', affiliateUrl: '#', rating: 4.8 },
-          { id: 'romp2', name: 'Hold Me Tight: Seven Conversations for a Lifetime of Love', type: 'book', description: "Dr. Sue Johnson's emotionally focused couples therapy transformed into a powerful self-help guide for understanding and deepening your romantic bond.", price: '$16.99', affiliateUrl: '#', rating: 4.7 },
+          { id: 'romp1', name: 'The Seven Principles for Making Marriage Work', type: 'book', description: "John Gottman's research-based guide to building a lasting, fulfilling partnership — backed by 40 years of scientific study of thousands of couples.", price: '$17.00', affiliateUrl: 'https://amzn.to/4bYwd5u', rating: 4.8 },
+          { id: 'romp2', name: 'Hold Me Tight: Seven Conversations for a Lifetime of Love', type: 'book', description: "Dr. Sue Johnson's emotionally focused couples therapy transformed into a powerful self-help guide for understanding and deepening your romantic bond.", price: '$16.99', affiliateUrl: 'https://amzn.to/4fsBXWg', rating: 4.7 },
         ],
       },
       {
@@ -379,7 +379,7 @@ export const areasData: Record<string, AreaData> = {
         ],
         products: [
           { id: 'famp1', name: 'The Whole-Brain Child: 12 Revolutionary Strategies to Nurture Your Child\'s Developing Mind', type: 'book', description: "Daniel Siegel and Tina Payne Bryson's neuroscience-based approach to raising emotionally intelligent, resilient children while strengthening your relationship.", price: '$15.99', affiliateUrl: '#', rating: 4.7 },
-          { id: 'famp2', name: 'The Power of Moments: Why Certain Experiences Have Extraordinary Impact', type: 'book', description: "Chip and Dan Heath show how to intentionally create the defining moments that deepen family bonds and become treasured memories forever.", price: '$17.00', affiliateUrl: '#', rating: 4.6 },
+          { id: 'famp2', name: 'The Power of Moments: Why Certain Experiences Have Extraordinary Impact', type: 'book', description: "Chip and Dan Heath show how to intentionally create the defining moments that deepen family bonds and become treasured memories forever.", price: '$17.00', affiliateUrl: 'https://amzn.to/3RqKLEb', rating: 4.6 },
         ],
       },
       {
@@ -396,8 +396,8 @@ export const areasData: Record<string, AreaData> = {
           { text: 'Friendship is the only cement that will ever hold the world together.', author: 'Woodrow Wilson' },
         ],
         products: [
-          { id: 'frp1', name: 'Platonic: How the Science of Attachment Can Help You Make—and Keep—Friends', type: 'book', description: "Dr. Marisa Franco's evidence-based guide to forming deep, meaningful friendships as an adult — addressing the specific challenges of modern friendship.", price: '$18.99', affiliateUrl: '#', rating: 4.6 },
-          { id: 'frp2', name: 'How to Win Friends and Influence People', type: 'book', description: "Dale Carnegie's classic — still the definitive guide to building genuine rapport, making people feel valued, and creating lasting, meaningful connections.", price: '$15.99', affiliateUrl: '#', rating: 4.8 },
+          { id: 'frp1', name: 'Platonic: How the Science of Attachment Can Help You Make—and Keep—Friends', type: 'book', description: "Dr. Marisa Franco's evidence-based guide to forming deep, meaningful friendships as an adult — addressing the specific challenges of modern friendship.", price: '$18.99', affiliateUrl: 'https://amzn.to/4gWccA4', rating: 4.6 },
+          { id: 'frp2', name: 'How to Win Friends and Influence People', type: 'book', description: "Dale Carnegie's classic — still the definitive guide to building genuine rapport, making people feel valued, and creating lasting, meaningful connections.", price: '$15.99', affiliateUrl: 'https://amzn.to/4hB47Ro', rating: 4.8 },
         ],
       },
       {
@@ -415,7 +415,7 @@ export const areasData: Record<string, AreaData> = {
         ],
         products: [
           { id: 'comp1', name: 'Crucial Conversations: Tools for Talking When Stakes Are High', type: 'book', description: 'The definitive guide to high-stakes conversations — how to speak persuasively and caringly about topics that matter most, rather than avoiding them or escalating.', price: '$17.99', affiliateUrl: '#', rating: 4.7 },
-          { id: 'comp2', name: 'Never Split the Difference: Negotiating as if Your Life Depended on It', type: 'book', description: "FBI hostage negotiator Chris Voss reveals the communication and negotiation tactics that work in the highest-stakes situations — applicable to every conversation.", price: '$17.00', affiliateUrl: '#', rating: 4.8 },
+          { id: 'comp2', name: 'Never Split the Difference: Negotiating as if Your Life Depended on It', type: 'book', description: "FBI hostage negotiator Chris Voss reveals the communication and negotiation tactics that work in the highest-stakes situations — applicable to every conversation.", price: '$17.00', affiliateUrl: 'https://amzn.to/4wVKisv', rating: 4.8 },
         ],
       },
       {
@@ -432,8 +432,8 @@ export const areasData: Record<string, AreaData> = {
           { text: 'You are the average of the five people you spend the most time with.', author: 'Jim Rohn' },
         ],
         products: [
-          { id: 'netp1', name: 'Never Eat Alone: And Other Secrets to Success, One Relationship at a Time', type: 'book', description: "Keith Ferrazzi's classic guide to building a powerful network of genuine relationships — not shallow contacts — and how generosity is the ultimate competitive advantage.", price: '$16.99', affiliateUrl: '#', rating: 4.5 },
-          { id: 'netp2', name: 'The Art of Gathering: How We Meet and Why It Matters', type: 'book', description: "Priya Parker's guide to intentionally creating transformative gatherings — dinners, meetups, events — that forge genuine community and lasting connection.", price: '$17.00', affiliateUrl: '#', rating: 4.5 },
+          { id: 'netp1', name: 'Never Eat Alone: And Other Secrets to Success, One Relationship at a Time', type: 'book', description: "Keith Ferrazzi's classic guide to building a powerful network of genuine relationships — not shallow contacts — and how generosity is the ultimate competitive advantage.", price: '$16.99', affiliateUrl: 'https://amzn.to/4fxwZro', rating: 4.5 },
+          { id: 'netp2', name: 'The Art of Gathering: How We Meet and Why It Matters', type: 'book', description: "Priya Parker's guide to intentionally creating transformative gatherings — dinners, meetups, events — that forge genuine community and lasting connection.", price: '$17.00', affiliateUrl: 'https://amzn.to/4vOfDN2', rating: 4.5 },
         ],
       },
     ],
@@ -467,8 +467,8 @@ export const areasData: Record<string, AreaData> = {
           { text: "It's not your salary that makes you rich, it's your spending habits.", author: 'Charles A. Jaffe' },
         ],
         products: [
-          { id: 'wmp1', name: 'The Psychology of Money: Timeless Lessons on Wealth, Greed, and Happiness', type: 'book', description: "Morgan Housel's masterpiece on the strange ways people think about money — widely considered one of the most important financial books of the decade.", price: '$18.99', affiliateUrl: '#', rating: 4.9 },
-          { id: 'wmp2', name: 'Secrets of the Millionaire Mind: Mastering the Inner Game of Wealth', type: 'book', description: "T. Harv Eker reveals how your 'money blueprint' — your unconscious conditioning about money — determines your financial life. Practical tools to change it.", price: '$15.99', affiliateUrl: '#', rating: 4.6 },
+          { id: 'wmp1', name: 'The Psychology of Money: Timeless Lessons on Wealth, Greed, and Happiness', type: 'book', description: "Morgan Housel's masterpiece on the strange ways people think about money — widely considered one of the most important financial books of the decade.", price: '$18.99', affiliateUrl: 'https://amzn.to/4fwR7cT', rating: 4.9 },
+          { id: 'wmp2', name: 'Secrets of the Millionaire Mind: Mastering the Inner Game of Wealth', type: 'book', description: "T. Harv Eker reveals how your 'money blueprint' — your unconscious conditioning about money — determines your financial life. Practical tools to change it.", price: '$15.99', affiliateUrl: 'https://amzn.to/4yDmhrV', rating: 4.6 },
         ],
       },
       {
@@ -486,7 +486,7 @@ export const areasData: Record<string, AreaData> = {
         ],
         products: [
           { id: 'budp1', name: 'You Need a Budget (YNAB) — Annual Subscription', type: 'course', description: 'The most effective budgeting methodology and software available. Users report saving an average of $600 in their first two months and $6,000 in their first year.', price: '$109/year', affiliateUrl: '#', rating: 4.8 },
-          { id: 'budp2', name: 'I Will Teach You to Be Rich (2nd Edition)', type: 'book', description: "Ramit Sethi's practical, no-BS guide to automating your finances, eliminating debt, and building wealth — specifically designed for people who don't want to think about money all day.", price: '$19.99', affiliateUrl: '#', rating: 4.7 },
+          { id: 'budp2', name: 'I Will Teach You to Be Rich (2nd Edition)', type: 'book', description: "Ramit Sethi's practical, no-BS guide to automating your finances, eliminating debt, and building wealth — specifically designed for people who don't want to think about money all day.", price: '$19.99', affiliateUrl: 'https://amzn.to/3TzysWE', rating: 4.7 },
         ],
       },
       {
@@ -503,8 +503,8 @@ export const areasData: Record<string, AreaData> = {
           { text: 'Do not look for the needle in the haystack. Just buy the haystack.', author: 'John Bogle' },
         ],
         products: [
-          { id: 'invp1', name: 'The Little Book of Common Sense Investing (Updated Edition)', type: 'book', description: "John Bogle's definitive guide to index fund investing — the strategy that consistently beats 90% of professional investors and builds substantial long-term wealth.", price: '$21.99', affiliateUrl: '#', rating: 4.8 },
-          { id: 'invp2', name: 'A Random Walk Down Wall Street (Updated Edition)', type: 'book', description: "Burton Malkiel's classic — the book that convinced a generation of investors to use index funds and ignore the noise of Wall Street predictions.", price: '$18.99', affiliateUrl: '#', rating: 4.7 },
+          { id: 'invp1', name: 'The Little Book of Common Sense Investing (Updated Edition)', type: 'book', description: "John Bogle's definitive guide to index fund investing — the strategy that consistently beats 90% of professional investors and builds substantial long-term wealth.", price: '$21.99', affiliateUrl: 'https://amzn.to/4x6Ucrz', rating: 4.8 },
+          { id: 'invp2', name: 'A Random Walk Down Wall Street (Updated Edition)', type: 'book', description: "Burton Malkiel's classic — the book that convinced a generation of investors to use index funds and ignore the noise of Wall Street predictions.", price: '$18.99', affiliateUrl: 'https://amzn.to/4wkShiS', rating: 4.7 },
         ],
       },
       {
@@ -522,7 +522,7 @@ export const areasData: Record<string, AreaData> = {
         ],
         products: [
           { id: 'incp1', name: 'Earn 1K — Online Business Course', type: 'course', description: "Ramit Sethi's proven system for starting a profitable side business using your existing skills, from validating your idea to landing your first paying client.", price: '$997', affiliateUrl: '#', rating: 4.7 },
-          { id: 'incp2', name: 'The $100 Startup', type: 'book', description: "Chris Guillebeau's research into 1,500 micro-entrepreneurs reveals the patterns behind profitable businesses started with $100 or less and no special training.", price: '$16.99', affiliateUrl: '#', rating: 4.5 },
+          { id: 'incp2', name: 'The $100 Startup', type: 'book', description: "Chris Guillebeau's research into 1,500 micro-entrepreneurs reveals the patterns behind profitable businesses started with $100 or less and no special training.", price: '$16.99', affiliateUrl: 'https://amzn.to/4vOhj9i', rating: 4.5 },
         ],
       },
       {
@@ -539,8 +539,8 @@ export const areasData: Record<string, AreaData> = {
           { text: 'You miss 100% of the shots you do not take.', author: 'Wayne Gretzky' },
         ],
         products: [
-          { id: 'entp1', name: 'Zero to One: Notes on Startups, or How to Build the Future', type: 'book', description: "Peter Thiel's unconventional framework for creating businesses that build something genuinely new, rather than competing in crowded existing markets.", price: '$18.99', affiliateUrl: '#', rating: 4.6 },
-          { id: 'entp2', name: 'The E-Myth Revisited', type: 'book', description: "Michael Gerber reveals why most small businesses fail and what to do about it — how to build a business that runs without you through systems and processes.", price: '$16.99', affiliateUrl: '#', rating: 4.7 },
+          { id: 'entp1', name: 'Zero to One: Notes on Startups, or How to Build the Future', type: 'book', description: "Peter Thiel's unconventional framework for creating businesses that build something genuinely new, rather than competing in crowded existing markets.", price: '$18.99', affiliateUrl: 'https://amzn.to/4whAh9f', rating: 4.6 },
+          { id: 'entp2', name: 'The E-Myth Revisited', type: 'book', description: "Michael Gerber reveals why most small businesses fail and what to do about it — how to build a business that runs without you through systems and processes.", price: '$16.99', affiliateUrl: 'https://amzn.to/4fkf20v', rating: 4.7 },
         ],
       },
     ],
@@ -574,8 +574,8 @@ export const areasData: Record<string, AreaData> = {
           { text: 'People with goals succeed because they know where they are going.', author: 'Earl Nightingale' },
         ],
         products: [
-          { id: 'gsp1', name: 'The 12 Week Year: Get More Done in 12 Weeks than Others Do in 12 Months', type: 'book', description: "Brian Moran and Michael Lennington's revolutionary planning system that creates urgency and dramatically accelerates results by compressing your year into 12 weeks.", price: '$18.99', affiliateUrl: '#', rating: 4.7 },
-          { id: 'gsp2', name: 'Full Focus Planner (Quarterly)', type: 'physical', description: "Michael Hyatt's beautifully designed quarterly planner specifically engineered for goal achievement, daily intentionality, and building the habits that move you forward.", price: '$49.99', affiliateUrl: '#', rating: 4.6 },
+          { id: 'gsp1', name: 'The 12 Week Year: Get More Done in 12 Weeks than Others Do in 12 Months', type: 'book', description: "Brian Moran and Michael Lennington's revolutionary planning system that creates urgency and dramatically accelerates results by compressing your year into 12 weeks.", price: '$18.99', affiliateUrl: 'https://amzn.to/4hrn7lB', rating: 4.7 },
+          { id: 'gsp2', name: 'Full Focus Planner (Quarterly)', type: 'physical', description: "Michael Hyatt's beautifully designed quarterly planner specifically engineered for goal achievement, daily intentionality, and building the habits that move you forward.", price: '$49.99', affiliateUrl: 'https://amzn.to/4fOjiWm', rating: 4.6 },
         ],
       },
       {
@@ -610,8 +610,8 @@ export const areasData: Record<string, AreaData> = {
           { text: 'Either you run the day, or the day runs you.', author: 'Jim Rohn' },
         ],
         products: [
-          { id: 'tmp1', name: 'Getting Things Done: The Art of Stress-Free Productivity', type: 'book', description: "David Allen's legendary GTD system for capturing, clarifying, organizing, and completing everything on your plate — without the mental overhead of trying to remember it all.", price: '$16.99', affiliateUrl: '#', rating: 4.5 },
-          { id: 'tmp2', name: 'Todoist Premium — Task Manager', type: 'course', description: "The most intelligently designed task management app available. Used by 30 million people to capture every task, set priorities, and systematically get things done.", price: '$4/month', affiliateUrl: '#', rating: 4.6 },
+          { id: 'tmp1', name: 'Getting Things Done: The Art of Stress-Free Productivity', type: 'book', description: "David Allen's legendary GTD system for capturing, clarifying, organizing, and completing everything on your plate — without the mental overhead of trying to remember it all.", price: '$16.99', affiliateUrl: 'https://amzn.to/3UqjhiR', rating: 4.5 },
+          { id: 'tmp2', name: 'Todoist Premium — Task Manager', type: 'course', description: "The most intelligently designed task management app available. Used by 30 million people to capture every task, set priorities, and systematically get things done.", price: '$4/month', affiliateUrl: 'https://get.todoist.io/qjr9qskztt88', rating: 4.6 },
         ],
       },
       {
@@ -629,7 +629,7 @@ export const areasData: Record<string, AreaData> = {
         ],
         products: [
           { id: 'cgp1', name: "So Good They Can't Ignore You: Why Skills Trump Passion", type: 'book', description: "Cal Newport's counterintuitive guide to building a fulfilling career by developing rare and valuable skills — the approach that actually works, backed by real examples.", price: '$16.99', affiliateUrl: '#', rating: 4.6 },
-          { id: 'cgp2', name: 'The First 90 Days: Critical Success Strategies for New Leaders', type: 'book', description: "Michael Watkins' guide used by over 1.5 million leaders for accelerating transitions and making a strong impact in any new role, at any level.", price: '$19.99', affiliateUrl: '#', rating: 4.6 },
+          { id: 'cgp2', name: 'The First 90 Days: Critical Success Strategies for New Leaders', type: 'book', description: "Michael Watkins' guide used by over 1.5 million leaders for accelerating transitions and making a strong impact in any new role, at any level.", price: '$19.99', affiliateUrl: 'https://amzn.to/45R7qNl', rating: 4.6 },
         ],
       },
       {
@@ -646,8 +646,8 @@ export const areasData: Record<string, AreaData> = {
           { text: 'Be not afraid of growing slowly, be afraid only of standing still.', author: 'Chinese Proverb' },
         ],
         products: [
-          { id: 'pdp1', name: 'Atomic Habits: An Easy & Proven Way to Build Good Habits & Break Bad Ones', type: 'book', description: "James Clear's definitive, practical guide to building good habits and breaking bad ones. The single best book on behavior change and the mechanics of self-improvement.", price: '$18.99', affiliateUrl: '#', rating: 4.9 },
-          { id: 'pdp2', name: 'The Miracle Morning: The Not-So-Obvious Secret Guaranteed to Transform Your Life', type: 'book', description: "Hal Elrod's SAVERS morning routine framework — Silence, Affirmations, Visualization, Exercise, Reading, Scribing — has helped millions transform their mornings and their lives.", price: '$14.99', affiliateUrl: '#', rating: 4.5 },
+          { id: 'pdp1', name: 'Atomic Habits: An Easy & Proven Way to Build Good Habits & Break Bad Ones', type: 'book', description: "James Clear's definitive, practical guide to building good habits and breaking bad ones. The single best book on behavior change and the mechanics of self-improvement.", price: '$18.99', affiliateUrl: 'https://amzn.to/45g77LU', rating: 4.9 },
+          { id: 'pdp2', name: 'The Miracle Morning: The Not-So-Obvious Secret Guaranteed to Transform Your Life', type: 'book', description: "Hal Elrod's SAVERS morning routine framework — Silence, Affirmations, Visualization, Exercise, Reading, Scribing — has helped millions transform their mornings and their lives.", price: '$14.99', affiliateUrl: 'https://amzn.to/4q6uVeE', rating: 4.5 },
         ],
       },
     ],
