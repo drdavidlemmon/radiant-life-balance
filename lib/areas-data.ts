@@ -252,7 +252,7 @@ export const areasData: Record<string, AreaData> = {
           { text: 'The quieter you become, the more you can hear.', author: 'Ram Dass' },
         ],
         products: [
-          { id: 'medp1', name: 'Waking Up: A Guide to Spirituality Without Religion', type: 'book', description: 'Sam Harris explores the practice of meditation and mindfulness from a neuroscientific perspective, free from religious dogma. A modern classic.', price: '$17.99', affiliateUrl: '#', rating: 4.6 },
+          { id: 'medp1', name: 'Waking Up: A Guide to Spirituality Without Religion', type: 'book', description: 'Sam Harris explores the practice of meditation and mindfulness from a neuroscientific perspective, free from religious dogma. A modern classic.', price: '$17.99', affiliateUrl: 'https://www.amazon.com/Waking-Up-Spirituality-Without-Religion/dp/1451636024?dib=eyJ2IjoiMSJ9.35dzJegelo4ik9lYZB2W5lcHL6cLb-dKceZ6F8X0QEwcjWmIK2e-eDr0WUfVlrAr2QSCbsajSz6nDsMA10MFEMzXshRty6ORG59uK8Olx0s6RYKB07ReklT38_EsPkL1I9w0IOr_0zehgyEDjn89cbyQoTSnImEe-hCbnv5WfPp5iQS-wgJdUhKM3UGWdYfuib0wwXQ-0zgBAC6ixXedPWUW9bh_EM2dbPrACcpCets.J8UPt3AfMMG7bDWeA017x1lz98JWIHAP2S2vMAO8neU&dib_tag=se&keywords=Waking+Up+%28Sam+Harris%29&qid=1789413229&sr=8-1&linkCode=ll2&tag=radiantlifeba-20&linkId=a3f0313cb98d678e92334c713e7822bc&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl', rating: 4.6 },
           { id: 'medp2', name: 'Headspace Plus — Guided Meditation App', type: 'course', description: "World-class guided meditation and mindfulness with hundreds of sessions for sleep, focus, stress, anxiety, and relationships. Trusted by 70+ million people.", price: '$12.99/month', affiliateUrl: '#', rating: 4.7 },
         ],
       },
