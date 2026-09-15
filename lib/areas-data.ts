@@ -46,7 +46,6 @@ export const areasData: Record<string, AreaData> = {
         ],
         products: [
           { id: 'mp1', name: 'Moonwalking with Einstein: The Art and Science of Remembering Everything', type: 'book', description: "Joshua Foer's journey from science reporter to US Memory Champion — packed with actionable memory techniques anyone can use.", price: '$16.99', affiliateUrl: 'https://amzn.to/4fty2IB', rating: 4.5 },
-          { id: 'mp2', name: 'Anki — Spaced Repetition Software', type: 'course', description: 'The most powerful free flashcard system using AI-based spaced repetition algorithms to make memory stick for life. Used by medical students and language learners worldwide.', price: 'Free', affiliateUrl: '#', rating: 4.8 },
         ],
       },
       {
@@ -65,7 +64,6 @@ export const areasData: Record<string, AreaData> = {
         ],
         products: [
           { id: 'srp1', name: 'The Speed Reading Book', type: 'book', description: "Tony Buzan's comprehensive guide to doubling or tripling reading speed while maintaining or improving comprehension — the classic in the field.", price: '$15.99', affiliateUrl: 'https://amzn.to/4wkQFWB', rating: 4.3 },
-          { id: 'srp2', name: 'Spreeder Speed Reading App', type: 'course', description: 'The most popular speed reading training app, used by over 5 million people. Includes RSVP training, comprehension tests, and progress tracking.', price: '$9.99/month', affiliateUrl: '#', rating: 4.2 },
         ],
       },
       {
@@ -486,7 +484,7 @@ export const areasData: Record<string, AreaData> = {
           { text: 'Beware of little expenses; a small leak will sink a great ship.', author: 'Benjamin Franklin' },
         ],
         products: [
-          { id: 'budp1', name: 'You Need a Budget (YNAB) — Annual Subscription', type: 'course', description: 'The most effective budgeting methodology and software available. Users report saving an average of $600 in their first two months and $6,000 in their first year.', price: '$109/year', affiliateUrl: '#', rating: 4.8 },
+          { id: 'budp1', name: 'You Need a Budget: The Proven System for Breaking the Paycheck-to-Paycheck Cycle', type: 'book', description: "Jesse Mecham's book distilling the YNAB methodology — four simple rules that help you gain control of your money, stop living paycheck to paycheck, and build real savings.", price: '$16.99', affiliateUrl: '#', rating: 4.7 },
           { id: 'budp2', name: 'I Will Teach You to Be Rich (2nd Edition)', type: 'book', description: "Ramit Sethi's practical, no-BS guide to automating your finances, eliminating debt, and building wealth — specifically designed for people who don't want to think about money all day.", price: '$19.99', affiliateUrl: 'https://amzn.to/3TzysWE', rating: 4.7 },
         ],
       },
@@ -522,7 +520,6 @@ export const areasData: Record<string, AreaData> = {
           { text: 'Your income is directly related to your philosophy, not the economy.', author: 'Jim Rohn' },
         ],
         products: [
-          { id: 'incp1', name: 'Earn 1K — Online Business Course', type: 'course', description: "Ramit Sethi's proven system for starting a profitable side business using your existing skills, from validating your idea to landing your first paying client.", price: '$997', affiliateUrl: '#', rating: 4.7 },
           { id: 'incp2', name: 'The $100 Startup', type: 'book', description: "Chris Guillebeau's research into 1,500 micro-entrepreneurs reveals the patterns behind profitable businesses started with $100 or less and no special training.", price: '$16.99', affiliateUrl: 'https://amzn.to/4vOhj9i', rating: 4.5 },
         ],
       },
