@@ -10,6 +10,7 @@ import { MindMapHex } from '@/components/mind-map-hex'
 import { DownloadPDFButton } from '@/components/download-pdf-button'
 import { ShareResultsPanel } from '@/components/share-results-panel'
 import { ShareImageButton } from '@/components/share-image-button'
+import { NewsletterSignup } from '@/components/newsletter-signup'
 import { AreaKey, QuizResults } from '@/types'
 
 const AREA_META: Record<AreaKey, { name: string; icon: string; hex: string; light: string; textColor: string }> = {
@@ -239,6 +240,12 @@ export default function ResultsPage() {
               )
             })}
           </div>
+        </motion.div>
+
+        {/* ── Newsletter Signup ── */}
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
+          className="mb-8">
+          <NewsletterSignup defaultChecked={[results.priorities[0]]} />
         </motion.div>
 
         {/* ── Deep Dive CTA ── */}
