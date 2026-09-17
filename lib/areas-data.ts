@@ -26,7 +26,6 @@ export const areasData: Record<string, AreaData> = {
         ],
         products: [
           { id: 'lp1', name: 'Ultralearning: Master Hard Skills, Outsmart the Competition, and Accelerate Your Career', type: 'book', description: "Scott Young's proven methodology for self-directed, intense learning projects that help you master skills in record time — from programming to languages.", price: '$18.99', affiliateUrl: 'https://amzn.to/4weA72j', rating: 4.7 },
-          { id: 'lp2', name: 'Learning How to Learn (Coursera)', type: 'course', description: "The world's most popular online course, taught by Dr. Barbara Oakley. Science-backed techniques to improve how you learn anything, forever.", price: 'Free', affiliateUrl: '#', rating: 4.9 },
           { id: 'lp3', name: 'Make It Stick: The Science of Successful Learning', type: 'book', description: 'Cognitive scientists reveal the most effective learning strategies, many of which go against conventional wisdom about studying.', price: '$16.99', affiliateUrl: 'https://www.amazon.com/Make-Stick-Science-Successful-Learning/dp/0674729013?crid=39PO0V03SI4VG&dib=eyJ2IjoiMSJ9.ZdX5E2U3qsigZPbVgpTjIvgZFLfCNBrM7rzkgNpELzB6O_Mlubgx0hrro9HhXIA7Ecq8QKnM2dIoN9thhWmgGlTPL8jEoRlQXbencxyF8yG_3QE6B-aoBm8xljmuVPf_ENnVJfaYpoL886GdsQx0-WNkFowdsyprp484BQQMMpeP4j9byysLTeJRTQ40TzNFGXz8TTzhwCMJZwSUqhohzUXVjsCk3quY59m9Z8W9PJg.lUYHAA9osfysiyPDk7edQl_or7BD-4OD3ApctEWNWrY&dib_tag=se&keywords=Make+It+Stick&qid=1789397424&sprefix=make+it+stick%2Caps%2C193&sr=8-1&linkCode=ll2&tag=radiantlifeba-20&linkId=c9223553c2c03aa68be9b728f21df06a&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl', rating: 4.6 },
         ],
       },
@@ -325,7 +324,6 @@ export const areasData: Record<string, AreaData> = {
         ],
         products: [
           { id: 'spp1', name: 'The Untethered Soul: The Journey Beyond Yourself', type: 'book', description: "Michael Singer's profound exploration of consciousness, spiritual awakening, and the path to inner freedom — one of the most beloved spiritual books of the modern era.", price: '$16.99', affiliateUrl: 'https://amzn.to/4wlBxZ1', rating: 4.8 },
-          { id: 'spp2', name: 'Insight Timer — Free Meditation App', type: 'course', description: "The world's largest free library of guided meditations with over 100,000 sessions, plus a community of 25 million meditators worldwide.", price: 'Free', affiliateUrl: '#', rating: 4.7 },
         ],
       },
     ],
