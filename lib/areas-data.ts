@@ -82,7 +82,6 @@ export const areasData: Record<string, AreaData> = {
         products: [
           { id: 'fp1', name: 'Deep Work: Rules for Focused Success in a Distracted World', type: 'book', description: "Cal Newport's masterpiece on the power of concentrated focus and how to cultivate it deliberately in our age of endless distraction.", price: '$17.99', affiliateUrl: 'https://amzn.to/4wkqEqt', rating: 4.8 },
           { id: 'fp2', name: 'Focus Factor Brain Health Supplement', type: 'supplement', description: "America's #1 selling brain health supplement — supports memory, concentration, and focus with a clinically studied formula containing 40 key nutrients.", price: '$29.99', affiliateUrl: 'https://amzn.to/3RNXZLj', rating: 4.1 },
-          { id: 'fp3', name: 'Brain.fm — AI Music for Focus', type: 'course', description: 'Scientifically designed music that puts your brain into states of deep focus, relaxation, or sleep within minutes using neural phase-locking technology.', price: '$6.99/month', affiliateUrl: '#', rating: 4.5 },
         ],
       },
       {
@@ -250,7 +249,8 @@ export const areasData: Record<string, AreaData> = {
         ],
         products: [
           { id: 'medp1', name: 'Waking Up: A Guide to Spirituality Without Religion', type: 'book', description: 'Sam Harris explores the practice of meditation and mindfulness from a neuroscientific perspective, free from religious dogma. A modern classic.', price: '$17.99', affiliateUrl: 'https://www.amazon.com/Waking-Up-Spirituality-Without-Religion/dp/1451636024?dib=eyJ2IjoiMSJ9.35dzJegelo4ik9lYZB2W5lcHL6cLb-dKceZ6F8X0QEwcjWmIK2e-eDr0WUfVlrAr2QSCbsajSz6nDsMA10MFEMzXshRty6ORG59uK8Olx0s6RYKB07ReklT38_EsPkL1I9w0IOr_0zehgyEDjn89cbyQoTSnImEe-hCbnv5WfPp5iQS-wgJdUhKM3UGWdYfuib0wwXQ-0zgBAC6ixXedPWUW9bh_EM2dbPrACcpCets.J8UPt3AfMMG7bDWeA017x1lz98JWIHAP2S2vMAO8neU&dib_tag=se&keywords=Waking+Up+%28Sam+Harris%29&qid=1789413229&sr=8-1&linkCode=ll2&tag=radiantlifeba-20&linkId=a3f0313cb98d678e92334c713e7822bc&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl', rating: 4.6 },
-          { id: 'medp2', name: 'Headspace Plus — Guided Meditation App', type: 'course', description: "World-class guided meditation and mindfulness with hundreds of sessions for sleep, focus, stress, anxiety, and relationships. Trusted by 70+ million people.", price: '$12.99/month', affiliateUrl: '#', rating: 4.7 },
+          { id: 'medp2', name: 'Wherever You Go, There You Are: Mindfulness Meditation in Everyday Life', type: 'book', description: "Jon Kabat-Zinn's foundational guide to bringing mindfulness into daily life — the book that helped introduce secular mindfulness meditation to the Western world.", price: '$16.99', affiliateUrl: 'https://amzn.to/3RAgH99', rating: 4.7 },
+          { id: 'medp3', name: '10% Happier: How I Tamed the Voice in My Head', type: 'book', description: "Dan Harris's skeptic-friendly memoir on discovering meditation as a working journalist — a practical, humor-filled entry point for anyone who thinks meditation isn't for them.", price: '$17.99', affiliateUrl: 'https://amzn.to/4pNb0RR', rating: 4.6 },
         ],
       },
       {
