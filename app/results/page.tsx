@@ -245,7 +245,7 @@ export default function ResultsPage() {
         {/* ── Newsletter Signup ── */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
           className="mb-8">
-          <NewsletterSignup defaultChecked={[results.priorities[0]]} />
+          <NewsletterSignup defaultChecked={results.priorities.slice(0, 2)} />
         </motion.div>
 
         {/* ── Deep Dive CTA ── */}
