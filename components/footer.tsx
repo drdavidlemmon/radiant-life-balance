@@ -60,7 +60,10 @@ export function Footer() {
               { href: '/quiz',       label: 'Take the Assessment' },
               { href: '/results',    label: 'View My Results' },
               { href: '/#introduction', label: 'Introduction' },
+              { href: '/about',      label: 'About' },
               { href: '/disclaimer', label: 'Disclaimer' },
+              { href: '/privacy',    label: 'Privacy Policy' },
+              { href: '/terms',      label: 'Terms of Service' },
             ].map(l => (
               <li key={l.href}>
                 <Link href={l.href} className="text-sm text-slate-600 hover:text-slate-900 transition-colors">
@@ -104,10 +107,14 @@ export function Footer() {
           <p className="text-xs text-slate-400">
             © {year} Radiant Life Balance. All rights reserved.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link href="/about" className="text-xs text-slate-400 hover:text-slate-600 transition-colors">About</Link>
+            <span className="text-slate-200">|</span>
             <Link href="/disclaimer" className="text-xs text-slate-400 hover:text-slate-600 transition-colors">Disclaimer</Link>
             <span className="text-slate-200">|</span>
-            <Link href="/#introduction" className="text-xs text-slate-400 hover:text-slate-600 transition-colors">Introduction</Link>
+            <Link href="/privacy" className="text-xs text-slate-400 hover:text-slate-600 transition-colors">Privacy Policy</Link>
+            <span className="text-slate-200">|</span>
+            <Link href="/terms" className="text-xs text-slate-400 hover:text-slate-600 transition-colors">Terms of Service</Link>
             <span className="text-slate-200">|</span>
             <Link href="/quiz" className="text-xs text-slate-400 hover:text-slate-600 transition-colors">Take the Quiz</Link>
           </div>
