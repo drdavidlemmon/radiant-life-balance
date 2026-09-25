@@ -51,9 +51,10 @@ export default function PrivacyPage() {
           <p>We may collect several types of information from and about users of our Website:</p>
           <ul className="list-disc pl-5 space-y-2">
             <li>
-              <strong>Quiz responses:</strong> Your answers to the Radiant Life Balance assessment are processed
-              in your browser to calculate your results. If you order a personalized report, your answers and
-              scores are sent to our report storage and AI provider to generate it. We keep them for up to 30 days.
+              <strong>Quiz and report responses:</strong> Your answers to the Radiant Life Balance assessment and
+              deep dives are processed in your browser to calculate your results. If you order a personalized
+              report, your quiz and deep dive answers, scores, and responses to eight intake questions are sent
+              to our report storage and AI provider to generate it. We keep them for up to 30 days.
             </li>
             <li>
               <strong>Email address:</strong> If you voluntarily subscribe to our newsletter, opt in for updates,
@@ -115,7 +116,7 @@ export default function PrivacyPage() {
           <p>
             We may use third-party services to help us operate our Website and communicate with subscribers,
             including web hosting providers, analytics services, Stripe for payments, an AI report provider,
-            temporary report storage, and email delivery platforms. Quiz answers used for a purchased report
+            temporary report storage, and email delivery platforms. Quiz, deep dive, and intake answers used for a purchased report
             are stored for up to 30 days. These providers
             have access to personal information only to the extent necessary to perform their functions and
             are contractually obligated to protect it.

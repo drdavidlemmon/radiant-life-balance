@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto'
 import { redisCommand, redisReady } from '@/lib/redis'
 import { isQuizResults } from '@/lib/premium-report'
 import { quizQuestions } from '@/lib/quiz-data'
+import { isDeepDiveInput, isReportIntake, type ReportOrderInput } from '@/lib/report-intake'
 
 export const runtime = 'nodejs'
 
@@ -14,12 +15,14 @@ export async function POST(req: NextRequest) {
   }
   try {
     const body: unknown = await req.json()
-    const input = body as { results?: unknown; answers?: Record<string, unknown> }
+    const input = body as Partial<ReportOrderInput>
     if (!isQuizResults(input?.results) || !input.answers ||
       Object.keys(input.answers).length !== quizQuestions.length ||
       !quizQuestions.every(q => Number.isInteger(input.answers?.[q.id]) && Number(input.answers?.[q.id]) >= 1 && Number(input.answers?.[q.id]) <= 5) ||
-      JSON.stringify(body).length > 18000) {
-      return NextResponse.json({ error: 'Complete the quiz before ordering a report.' }, { status: 400 })
+      !isReportIntake(input.intake) || !input.deepDives ||
+      !input.results.priorities.slice(0, 2).every(area => isDeepDiveInput(input.deepDives?.[area], area)) ||
+      JSON.stringify(body).length > 30000) {
+      return NextResponse.json({ error: 'Complete the quiz, both priority deep dives, and the report questions before checkout.' }, { status: 400 })
     }
     const token = randomUUID()
     await redisCommand('SET', `report:input:${token}`, JSON.stringify(body), 'EX', 60 * 60 * 24 * 30)

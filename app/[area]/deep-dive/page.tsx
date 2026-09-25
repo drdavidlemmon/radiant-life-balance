@@ -77,6 +77,7 @@ export default function DeepDivePage() {
         localStorage.setItem(`deepDiveResults_${areaKey}`, JSON.stringify({
           area: areaKey,
           subcategoryScores: result,
+          answers: updated,
           completedAt: new Date().toISOString(),
         }))
         router.push(`/${areaKey}/deep-dive/results`)
