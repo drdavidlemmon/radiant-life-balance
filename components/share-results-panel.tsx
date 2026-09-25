@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Share2, Copy, Check, Mail, Facebook, Users } from 'lucide-react'
 import { QuizResults, AreaKey } from '@/types'
 import { ShareImageButton } from '@/components/share-image-button'
+import { trackEvent } from '@/lib/analytics'
 
 function XIcon({ className }: { className?: string }) {
   return (
@@ -60,12 +61,14 @@ export function ShareResultsPanel({ results }: Props) {
 
   async function copyLink() {
     await navigator.clipboard.writeText(quizUrl)
+    trackEvent('share')
     setCopied(true)
     setTimeout(() => setCopied(false), 2200)
   }
 
   async function copyMessage() {
     await navigator.clipboard.writeText(longText)
+    trackEvent('share')
     setCopiedMsg(true)
     setTimeout(() => setCopiedMsg(false), 2200)
   }
@@ -74,6 +77,7 @@ export function ShareResultsPanel({ results }: Props) {
     if (navigator.share) {
       try {
         await navigator.share({ title: 'My Life Balance Results', text: tweetText, url: quizUrl })
+        trackEvent('share')
       } catch { /* dismissed */ }
     }
   }
@@ -111,29 +115,32 @@ export function ShareResultsPanel({ results }: Props) {
       </div>
 
       {/* Social buttons */}
+      <p className="text-xs text-slate-500 mb-3">Try it together: ask a friend or partner which area they want to strengthen first.</p>
+      <a href={`sms:?&body=${encodeURIComponent(longText)}`} onClick={() => trackEvent('share')}
+        className="block text-center rounded-xl bg-purple-600 text-white font-semibold text-sm py-2.5 mb-3">Invite by text message</a>
       <div className="grid grid-cols-4 gap-2 mb-4">
-        <a href={twitterHref} target="_blank" rel="noopener noreferrer"
+        <a href={twitterHref} onClick={() => trackEvent('share')} target="_blank" rel="noopener noreferrer"
           className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl hover:bg-slate-50 transition-colors border border-slate-100">
           <div className="w-9 h-9 rounded-full bg-black flex items-center justify-center">
             <XIcon className="w-4 h-4 text-white" />
           </div>
           <span className="text-[10px] text-slate-500 font-medium">X / Twitter</span>
         </a>
-        <a href={whatsappHref} target="_blank" rel="noopener noreferrer"
+        <a href={whatsappHref} onClick={() => trackEvent('share')} target="_blank" rel="noopener noreferrer"
           className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl hover:bg-slate-50 transition-colors border border-slate-100">
           <div className="w-9 h-9 rounded-full bg-[#25D366] flex items-center justify-center">
             <WhatsAppIcon className="w-4 h-4 text-white" />
           </div>
           <span className="text-[10px] text-slate-500 font-medium">WhatsApp</span>
         </a>
-        <a href={facebookHref} target="_blank" rel="noopener noreferrer"
+        <a href={facebookHref} onClick={() => trackEvent('share')} target="_blank" rel="noopener noreferrer"
           className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl hover:bg-slate-50 transition-colors border border-slate-100">
           <div className="w-9 h-9 rounded-full bg-[#1877F2] flex items-center justify-center">
             <Facebook className="w-4 h-4 text-white" />
           </div>
           <span className="text-[10px] text-slate-500 font-medium">Facebook</span>
         </a>
-        <a href={emailHref}
+        <a href={emailHref} onClick={() => trackEvent('share')}
           className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl hover:bg-slate-50 transition-colors border border-slate-100">
           <div className="w-9 h-9 rounded-full bg-slate-700 flex items-center justify-center">
             <Mail className="w-4 h-4 text-white" />

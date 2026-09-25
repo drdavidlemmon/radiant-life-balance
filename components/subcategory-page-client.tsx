@@ -1,4 +1,5 @@
 'use client'
+import { trackEvent } from '@/lib/analytics'
 
 import { useState } from 'react'
 import Link from 'next/link'
@@ -84,7 +85,7 @@ export function SubcategoryPageClient({ area, subcategory }: Props) {
             {subcategory.products.map((product, i) => {
               const tm = TYPE_META[product.type]
               return (
-                <motion.a key={product.id} href={product.affiliateUrl} target="_blank" rel="noopener noreferrer"
+                <motion.a key={product.id} href={product.affiliateUrl} onClick={() => trackEvent('affiliate_click')} target="_blank" rel="noopener noreferrer"
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}
                   className="group block bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md rounded-xl p-5 transition-all">
                   <div className="flex items-start justify-between mb-3">

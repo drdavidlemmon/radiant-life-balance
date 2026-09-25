@@ -1,0 +1,72 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { redisCommand, redisReady } from '@/lib/redis'
+import { AREA_KEYS, isPremiumReport, isQuizResults, resourcesForArea, type PremiumReport } from '@/lib/premium-report'
+import { areasData } from '@/lib/areas-data'
+import { quizQuestions } from '@/lib/quiz-data'
+
+export const runtime = 'nodejs'
+export const maxDuration = 60
+
+export async function POST(req: NextRequest) {
+  const stripeKey = process.env.STRIPE_SECRET_KEY
+  const aiKey = process.env.OPENAI_API_KEY
+  if (!stripeKey || !aiKey || !redisReady()) return NextResponse.json({ error: 'Reports are unavailable.' }, { status: 503 })
+  let sessionId: string
+  try {
+    const body = await req.json() as { sessionId?: string }
+    sessionId = typeof body.sessionId === 'string' ? body.sessionId : ''
+  } catch { return NextResponse.json({ error: 'Invalid request.' }, { status: 400 }) }
+  if (!/^cs_(test|live)_[a-zA-Z0-9]{10,}$/.test(sessionId)) return NextResponse.json({ error: 'Invalid checkout session.' }, { status: 400 })
+
+  try {
+    const stripe = await fetch(`https://api.stripe.com/v1/checkout/sessions/${sessionId}`, {
+      headers: { Authorization: `Bearer ${stripeKey}` }, cache: 'no-store',
+    })
+    if (!stripe.ok) return NextResponse.json({ error: 'Could not verify payment.' }, { status: 502 })
+    const session = await stripe.json() as { payment_status?: string; amount_total?: number; currency?: string; metadata?: { report_token?: string } }
+    if (session.payment_status !== 'paid' || session.amount_total !== 699 || session.currency !== 'usd') {
+      return NextResponse.json({ error: 'Payment has not completed.' }, { status: 403 })
+    }
+    const token = session.metadata?.report_token
+    if (!token || !/^[0-9a-f-]{36}$/.test(token)) return NextResponse.json({ error: 'Report order not found.' }, { status: 404 })
+    const saved = await redisCommand<string | null>('GET', `report:input:${token}`)
+    if (!saved) return NextResponse.json({ error: 'This report has expired. Please contact support.' }, { status: 410 })
+    const input = JSON.parse(saved) as { results: unknown; answers: Record<string, number> }
+    const results = input.results
+    if (!isQuizResults(results)) throw new Error('Invalid saved results')
+    const cached = await redisCommand<string | null>('GET', `report:output:${token}`)
+    if (cached) return NextResponse.json({ results, report: JSON.parse(cached), resources: Object.fromEntries(AREA_KEYS.map(a => [a, resourcesForArea(a, results)])) })
+
+    const lock = await redisCommand<string | null>('SET', `report:generating:${token}`, '1', 'NX', 'EX', 120)
+    if (lock !== 'OK') return NextResponse.json({ error: 'Your report is already being prepared. Please try again shortly.' }, { status: 429 })
+    try {
+    const prompt = `Write a substantive and empathetic personalized 10-page Life Balance report from the following six area scores and subarea scores: ${JSON.stringify(results)}. Quiz statements and answer scale 1=not true to 5=very true: ${JSON.stringify(quizQuestions.map(q => ({ area: q.area, statement: q.question, answer: input.answers[q.id] })))}. Prioritize lower scores; explain how high-scoring areas can support low-scoring ones. For relationships, discuss communication, family, romantic, and networking only when a score exists. Avoid assuming identity, illness, wealth, or relationship status. No diagnoses, treatments, or guarantees. The reader is an adult. Output strictly JSON with fields overview, strengths, priorityStrategy, connections, nextThirtyDays, and areaPlans, an array of SIX objects with area, insight, strengthBridge, firstStep, monthPlan. Each area must be one of ${AREA_KEYS.join(', ')} exactly once. Keep overview 120 words; strengths, priorityStrategy, connections and nextThirtyDays 60-100 words each; each area insight, strengthBridge, and monthPlan 65-90 words; firstStep 30-45 words. Be specific to answers and score differences. Use short paragraphs separated by newline. Do not invent products or URLs. Existing site resources (for reference only, links are inserted separately): ${JSON.stringify(AREA_KEYS.map(a => ({ area: a, subareas: areasData[a].subcategories.map(s => s.name) })))}.`
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${aiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: process.env.OPENAI_REPORT_MODEL || 'gpt-5.4-mini', response_format: { type: 'json_object' }, messages: [
+        { role: 'system', content: 'You write careful educational wellness reports. Return only valid JSON. Respect the supplied scores. Do not offer medical, financial, or mental health diagnosis or personalized treatment.' },
+        { role: 'user', content: prompt },
+      ] }), cache: 'no-store',
+    })
+    if (!response.ok) return NextResponse.json({ error: 'Your payment is complete. The report is temporarily unavailable; please retry this link.' }, { status: 502 })
+    const data = await response.json() as { choices?: { message?: { content?: string } }[] }
+    const parsed: unknown = JSON.parse(data.choices?.[0]?.message?.content || '')
+    if (!isPremiumReport(parsed)) throw new Error('Invalid AI report')
+    const shorten = (value: string, words: number) => value.trim().split(/\s+/).slice(0, words).join(' ')
+    const report: PremiumReport = {
+      overview: shorten(parsed.overview, 120), strengths: shorten(parsed.strengths, 100),
+      priorityStrategy: shorten(parsed.priorityStrategy, 100), connections: shorten(parsed.connections, 100),
+      nextThirtyDays: shorten(parsed.nextThirtyDays, 100),
+      areaPlans: parsed.areaPlans.map(plan => ({ area: plan.area, insight: shorten(plan.insight, 90),
+        strengthBridge: shorten(plan.strengthBridge, 90), firstStep: shorten(plan.firstStep, 45), monthPlan: shorten(plan.monthPlan, 90) })),
+    }
+    await redisCommand('SET', `report:output:${token}`, JSON.stringify(report satisfies PremiumReport), 'EX', 60 * 60 * 24 * 30)
+    return NextResponse.json({ results, report, resources: Object.fromEntries(AREA_KEYS.map(a => [a, resourcesForArea(a, results)])) })
+    } finally {
+      await redisCommand('DEL', `report:generating:${token}`).catch(() => {})
+    }
+  } catch {
+    return NextResponse.json({ error: 'Your payment is complete. We could not generate the report yet. Please retry the link.' }, { status: 502 })
+  }
+}

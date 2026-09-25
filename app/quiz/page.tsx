@@ -7,6 +7,7 @@ import { ChevronLeft, CheckCircle } from 'lucide-react'
 import { quizQuestions } from '@/lib/quiz-data'
 import Image from 'next/image'
 import { AreaKey, QuizResults } from '@/types'
+import { trackEvent } from '@/lib/analytics'
 
 const AREA_META: Record<AreaKey, { name: string; icon: string; hex: string; light: string; text: string }> = {
   mind:          { name: 'Mind',          icon: '/icon-mind.png',          hex: '#f97316', light: '#fff7ed', text: '#c2410c' },
@@ -74,6 +75,7 @@ export default function QuizPage() {
   })
 
   const handleAnswer = useCallback((val: number) => {
+    if (Object.keys(answers).length === 0) trackEvent('quiz_start')
     const newAnswers = { ...answers, [q.id]: val }
     setAnswers(newAnswers)
     if (current < total - 1) {
@@ -82,6 +84,8 @@ export default function QuizPage() {
       setCompleting(true)
       const results = calculateResults(newAnswers)
       localStorage.setItem('lifebalance_results', JSON.stringify(results))
+      localStorage.setItem('lifebalance_answers', JSON.stringify(newAnswers))
+      trackEvent('quiz_complete')
       setTimeout(() => router.push('/results'), 1800)
     }
   }, [answers, current, q, total, router])

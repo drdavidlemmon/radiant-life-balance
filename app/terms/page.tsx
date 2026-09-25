@@ -94,6 +94,10 @@ export default function TermsPage() {
           </p>
         </Section>
 
+        <Section title="Personalized reports">
+          <p>Optional AI-generated reports cost $6.99. Payment is processed through Stripe. After payment, you can download your report as a PDF for up to 30 days using your checkout return link. The report is educational self-reflection and is not medical, mental health, legal, or financial advice. If you paid but cannot access your report, contact us so we can help.</p>
+        </Section>
+
         <Section title="User-Provided Information">
           <p>
             If you provide your email address to subscribe to our newsletter or receive updates, you represent

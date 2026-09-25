@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Share2, Copy, Check, X, Mail, Facebook } from 'lucide-react'
+import { trackEvent } from '@/lib/analytics'
 
 // X/Twitter SVG (not in lucide)
 function XIcon({ className }: { className?: string }) {
@@ -35,6 +36,7 @@ export function ShareQuizButton({ variant = 'light' }: { variant?: 'light' | 'da
     if (navigator.share) {
       try {
         await navigator.share({ title: 'Radiant Life Balance Quiz', text: QUIZ_TEXT, url: shareUrl })
+        trackEvent('share')
       } catch { /* dismissed */ }
     } else {
       setOpen(o => !o)
@@ -43,6 +45,7 @@ export function ShareQuizButton({ variant = 'light' }: { variant?: 'light' | 'da
 
   async function copyLink() {
     await navigator.clipboard.writeText(shareUrl)
+    trackEvent('share')
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
