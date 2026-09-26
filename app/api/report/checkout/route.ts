@@ -4,14 +4,18 @@ import { redisCommand, redisReady } from '@/lib/redis'
 import { isQuizResults } from '@/lib/premium-report'
 import { quizQuestions } from '@/lib/quiz-data'
 import { isDeepDiveInput, isReportIntake, type ReportOrderInput } from '@/lib/report-intake'
+import { reportStripeKey } from '@/lib/stripe-key'
 
 export const runtime = 'nodejs'
 
 export async function POST(req: NextRequest) {
-  const stripeKey = process.env.STRIPE_SECRET_KEY
+  const stripeKey = reportStripeKey()
   const allowedPromoId = process.env.STRIPE_REPORT_TEST_PROMO_ID
-  const site = process.env.NEXT_PUBLIC_SITE_URL || 'https://radiantlifebalance.com'
-  if (process.env.NEXT_PUBLIC_REPORTS_ENABLED !== 'true' || !stripeKey || !redisReady() || !process.env.OPENAI_API_KEY) {
+  const site = process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : process.env.NEXT_PUBLIC_SITE_URL || 'https://radiantlifebalance.com'
+  if (process.env.NEXT_PUBLIC_REPORTS_ENABLED !== 'true' || !stripeKey || !redisReady() || !process.env.OPENAI_API_KEY ||
+    (process.env.VERCEL_ENV === 'preview' && !process.env.VERCEL_URL)) {
     return NextResponse.json({ error: 'Personalized reports are not available yet.' }, { status: 503 })
   }
   try {

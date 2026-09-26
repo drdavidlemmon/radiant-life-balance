@@ -5,12 +5,13 @@ import { areasData } from '@/lib/areas-data'
 import { quizQuestions } from '@/lib/quiz-data'
 import { deepDiveQuestions } from '@/lib/deep-dive-data'
 import { intakeFields, isDeepDiveInput, isReportIntake, type ReportOrderInput } from '@/lib/report-intake'
+import { reportStripeKey } from '@/lib/stripe-key'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
 
 export async function POST(req: NextRequest) {
-  const stripeKey = process.env.STRIPE_SECRET_KEY
+  const stripeKey = reportStripeKey()
   const aiKey = process.env.OPENAI_API_KEY
   if (!stripeKey || !aiKey || !redisReady()) return NextResponse.json({ error: 'Reports are unavailable.' }, { status: 503 })
   let sessionId: string
