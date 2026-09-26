@@ -25,8 +25,14 @@ export async function POST(req: NextRequest) {
       headers: { Authorization: `Bearer ${stripeKey}` }, cache: 'no-store',
     })
     if (!stripe.ok) return NextResponse.json({ error: 'Could not verify payment.' }, { status: 502 })
-    const session = await stripe.json() as { payment_status?: string; amount_total?: number; currency?: string; metadata?: { report_token?: string } }
-    if (session.payment_status !== 'paid' || session.amount_total !== 699 || session.currency !== 'usd') {
+    const session = await stripe.json() as { status?: string; payment_status?: string; amount_subtotal?: number; amount_total?: number; currency?: string; total_details?: { amount_discount?: number }; discounts?: Array<{ promotion_code?: string }>; metadata?: { report_token?: string; report_test_promo_id?: string } }
+    const regularPayment = session.payment_status === 'paid' && session.amount_total === 699
+    const freeTest = Boolean(process.env.STRIPE_REPORT_TEST_PROMO_ID &&
+      session.metadata?.report_test_promo_id === process.env.STRIPE_REPORT_TEST_PROMO_ID &&
+      session.discounts?.length === 1 && session.discounts[0].promotion_code === process.env.STRIPE_REPORT_TEST_PROMO_ID &&
+      session.amount_subtotal === 699 && session.amount_total === 0 && session.total_details?.amount_discount === 699 &&
+      (session.payment_status === 'paid' || session.payment_status === 'no_payment_required'))
+    if (session.status !== 'complete' || session.currency !== 'usd' || (!regularPayment && !freeTest)) {
       return NextResponse.json({ error: 'Payment has not completed.' }, { status: 403 })
     }
     const token = session.metadata?.report_token

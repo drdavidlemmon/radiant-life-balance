@@ -13,6 +13,7 @@ export function PremiumReportOffer({ results, isDemo }: { results: QuizResults; 
   const [status, setStatus] = useState('')
   const [report, setReport] = useState<Payload | null>(null)
   const [busy, setBusy] = useState(false)
+  const [coupon, setCoupon] = useState('')
   const [intake, setIntake] = useState<ReportIntake>(() => Object.fromEntries(intakeFields.map(field => [field.key, ''])) as ReportIntake)
   const [completedDives, setCompletedDives] = useState<AreaKey[]>([])
   const sessionId = query.get('report_session')
@@ -61,7 +62,7 @@ export function PremiumReportOffer({ results, isDemo }: { results: QuizResults; 
         const raw = localStorage.getItem(`deepDiveResults_${area}`)
         return [area, raw ? JSON.parse(raw) : null]
       }))
-      const res = await fetch('/api/report/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ results, answers, deepDives, intake }) })
+      const res = await fetch('/api/report/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ results, answers, deepDives, intake, coupon: coupon.trim() }) })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Could not start checkout')
       window.location.assign(data.url)
@@ -106,6 +107,9 @@ export function PremiumReportOffer({ results, isDemo }: { results: QuizResults; 
         </label>)}</div>
       </div>
     </div>}
+    {!sessionId && !isDemo && <label className="block max-w-xs mb-4 text-sm font-medium text-slate-800">Have a report code? (optional)
+      <input value={coupon} onChange={event => setCoupon(event.target.value)} maxLength={64} autoComplete="off" className="block w-full mt-1 rounded-lg border border-slate-300 bg-white p-3 text-slate-900 font-normal focus:outline-none focus:ring-2 focus:ring-purple-500" />
+    </label>}
     {report ? <button onClick={download} disabled={busy} className="bg-purple-700 text-white font-bold rounded-xl px-5 py-3 disabled:opacity-50">{busy ? 'Preparing PDF…' : 'Download your report'}</button>
       : sessionId ? <button onClick={() => location.reload()} disabled={busy} className="bg-purple-700 text-white font-bold rounded-xl px-5 py-3 disabled:opacity-50">{busy ? 'Preparing your report…' : 'Retry report'}</button>
       : <button onClick={purchase} disabled={busy || isDemo || missing.length > 0 || !intakeReady} className="bg-purple-700 text-white font-bold rounded-xl px-5 py-3 disabled:opacity-50">{busy ? 'Opening secure checkout…' : 'Get my report for $6.99'}</button>}

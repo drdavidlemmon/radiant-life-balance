@@ -9,13 +9,14 @@ export const runtime = 'nodejs'
 
 export async function POST(req: NextRequest) {
   const stripeKey = process.env.STRIPE_SECRET_KEY
+  const allowedPromoId = process.env.STRIPE_REPORT_TEST_PROMO_ID
   const site = process.env.NEXT_PUBLIC_SITE_URL || 'https://radiantlifebalance.com'
   if (process.env.NEXT_PUBLIC_REPORTS_ENABLED !== 'true' || !stripeKey || !redisReady() || !process.env.OPENAI_API_KEY) {
     return NextResponse.json({ error: 'Personalized reports are not available yet.' }, { status: 503 })
   }
   try {
     const body: unknown = await req.json()
-    const input = body as Partial<ReportOrderInput>
+    const input = body as Partial<ReportOrderInput> & { coupon?: unknown }
     if (!isQuizResults(input?.results) || !input.answers ||
       Object.keys(input.answers).length !== quizQuestions.length ||
       !quizQuestions.every(q => Number.isInteger(input.answers?.[q.id]) && Number(input.answers?.[q.id]) >= 1 && Number(input.answers?.[q.id]) <= 5) ||
@@ -23,6 +24,35 @@ export async function POST(req: NextRequest) {
       !input.results.priorities.slice(0, 2).every(area => isDeepDiveInput(input.deepDives?.[area], area)) ||
       JSON.stringify(body).length > 30000) {
       return NextResponse.json({ error: 'Complete the quiz, both priority deep dives, and the report questions before checkout.' }, { status: 400 })
+    }
+    const coupon = typeof input.coupon === 'string' ? input.coupon.trim() : ''
+    if ((input.coupon !== undefined && typeof input.coupon !== 'string') || coupon.length > 64) {
+      return NextResponse.json({ error: 'Invalid report code.' }, { status: 400 })
+    }
+    if (coupon) {
+      if (!allowedPromoId || !/^promo_[a-zA-Z0-9]+$/.test(allowedPromoId)) {
+        return NextResponse.json({ error: 'This report code is unavailable.' }, { status: 400 })
+      }
+      const response = await fetch(`https://api.stripe.com/v1/promotion_codes/${allowedPromoId}`, {
+        headers: { Authorization: `Bearer ${stripeKey}` }, cache: 'no-store',
+      })
+      if (!response.ok) return NextResponse.json({ error: 'Could not check the report code.' }, { status: 502 })
+      const promo = await response.json() as { id?: string; code?: string; active?: boolean; coupon?: { percent_off?: number; valid?: boolean }; promotion?: { type?: string; coupon?: string } }
+      if (!promo.active || promo.id !== allowedPromoId || promo.code?.toLowerCase() !== coupon.toLowerCase() ||
+        (!promo.coupon && (promo.promotion?.type !== 'coupon' || !promo.promotion.coupon))) {
+        return NextResponse.json({ error: 'That report code is not valid.' }, { status: 400 })
+      }
+      let discount = promo.coupon
+      if (!discount && promo.promotion?.coupon) {
+        const couponResponse = await fetch(`https://api.stripe.com/v1/coupons/${encodeURIComponent(promo.promotion.coupon)}`, {
+          headers: { Authorization: `Bearer ${stripeKey}` }, cache: 'no-store',
+        })
+        if (!couponResponse.ok) return NextResponse.json({ error: 'Could not check the report code.' }, { status: 502 })
+        discount = await couponResponse.json() as { percent_off?: number; valid?: boolean }
+      }
+      if (discount?.percent_off !== 100 || !discount.valid) {
+        return NextResponse.json({ error: 'That report code is not valid.' }, { status: 400 })
+      }
     }
     const token = randomUUID()
     await redisCommand('SET', `report:input:${token}`, JSON.stringify(body), 'EX', 60 * 60 * 24 * 30)
@@ -36,6 +66,10 @@ export async function POST(req: NextRequest) {
       cancel_url: `${site}/results`,
       'metadata[report_token]': token,
     })
+    if (coupon && allowedPromoId) {
+      params.set('discounts[0][promotion_code]', allowedPromoId)
+      params.set('metadata[report_test_promo_id]', allowedPromoId)
+    }
     const stripe = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST', headers: { Authorization: `Bearer ${stripeKey}`, 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params, cache: 'no-store',
