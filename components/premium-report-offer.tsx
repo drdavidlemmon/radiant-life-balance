@@ -54,7 +54,24 @@ export function PremiumReportOffer({ results, isDemo }: { results: QuizResults; 
     return () => { cancelled = true }
   }, [sessionId])
 
+  const priorityAreas = results.priorities.slice(0, 2)
+  const missing = priorityAreas.filter(area => !completedDives.includes(area))
+  const missingIntake = intakeFields.filter(field => field.required && !intake[field.key].trim())
+  const intakeReady = missingIntake.length === 0
+
   async function purchase() {
+    if (isDemo) {
+      setStatus('These are sample results. Take the 30-question quiz to order your own report.')
+      return
+    }
+    if (missing.length > 0 || !intakeReady) {
+      const steps = [
+        missing.length > 0 ? `complete the ${missing.map(area => area.charAt(0).toUpperCase() + area.slice(1)).join(' and ')} deep dive${missing.length > 1 ? 's' : ''}` : '',
+        !intakeReady ? `answer ${missingIntake.length} required report question${missingIntake.length > 1 ? 's' : ''}` : '',
+      ].filter(Boolean)
+      setStatus(`Before checkout, please ${steps.join(' and ')} above.`)
+      return
+    }
     setBusy(true); setStatus('')
     try {
       const answers = JSON.parse(localStorage.getItem('lifebalance_answers') || '{}')
@@ -84,9 +101,6 @@ export function PremiumReportOffer({ results, isDemo }: { results: QuizResults; 
   }
 
   if (!enabled && !sessionId) return null
-  const priorityAreas = results.priorities.slice(0, 2)
-  const missing = priorityAreas.filter(area => !completedDives.includes(area))
-  const intakeReady = intakeFields.every(field => !field.required || intake[field.key].trim().length > 0)
   return <section className="rounded-2xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 via-white to-green-50 p-6 sm:p-8 mb-8">
     <h2 className="text-2xl font-bold text-slate-900 mb-3">Your personalized 10-page report</h2>
     <p className="text-slate-600 text-sm max-w-2xl mb-5">Complete two deep dives and a short intake to receive guidance for all six life areas, a 30-day plan, and relevant reading and tools. Download as a PDF after purchase. $6.99 one-time.</p>
@@ -112,8 +126,15 @@ export function PremiumReportOffer({ results, isDemo }: { results: QuizResults; 
     </label>}
     {report ? <button onClick={download} disabled={busy} className="bg-purple-700 text-white font-bold rounded-xl px-5 py-3 disabled:opacity-50">{busy ? 'Preparing PDF…' : 'Download your report'}</button>
       : sessionId ? <button onClick={() => location.reload()} disabled={busy} className="bg-purple-700 text-white font-bold rounded-xl px-5 py-3 disabled:opacity-50">{busy ? 'Preparing your report…' : 'Retry report'}</button>
-      : <button onClick={purchase} disabled={busy || isDemo || missing.length > 0 || !intakeReady} className="bg-purple-700 text-white font-bold rounded-xl px-5 py-3 disabled:opacity-50">{busy ? 'Opening secure checkout…' : 'Get my report for $6.99'}</button>}
+      : <button onClick={purchase} disabled={busy} className="bg-purple-700 text-white font-bold rounded-xl px-5 py-3 disabled:opacity-50">{busy ? 'Opening secure checkout…' : 'Get my report for $6.99'}</button>}
     {isDemo && !sessionId && <p className="text-sm text-slate-500 mt-3">Take the quiz to order your own report.</p>}
+    {!sessionId && !isDemo && (missing.length > 0 || !intakeReady) && (
+      <p className="text-sm text-slate-600 mt-3">
+        To unlock checkout: {missing.length > 0 && `${missing.length} priority deep dive${missing.length > 1 ? 's' : ''}`}
+        {missing.length > 0 && !intakeReady && ' and '}
+        {!intakeReady && `${missingIntake.length} required report question${missingIntake.length > 1 ? 's' : ''}`} remaining.
+      </p>
+    )}
     {status && <p role="status" className="text-sm text-slate-700 mt-4">{status}</p>}
     <p className="text-xs text-slate-500 mt-4">AI-generated education for self-reflection; not professional advice. Results are stored temporarily for 30 days. Your free results remain available.</p>
   </section>
