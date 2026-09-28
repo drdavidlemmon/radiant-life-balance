@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
     (process.env.VERCEL_ENV === 'preview' && !process.env.VERCEL_URL)) {
     return NextResponse.json({ error: 'Personalized reports are not available yet.' }, { status: 503 })
   }
+  let stage = 'reading request'
   try {
     const body: unknown = await req.json()
     const input = body as Partial<ReportOrderInput> & { coupon?: unknown }
@@ -59,6 +60,7 @@ export async function POST(req: NextRequest) {
       }
     }
     const token = randomUUID()
+    stage = 'report storage (Upstash)'
     await redisCommand('SET', `report:input:${token}`, JSON.stringify(body), 'EX', 60 * 60 * 24 * 30)
     const params = new URLSearchParams({
       mode: 'payment',
@@ -74,15 +76,40 @@ export async function POST(req: NextRequest) {
       params.set('discounts[0][promotion_code]', allowedPromoId)
       params.set('metadata[report_test_promo_id]', allowedPromoId)
     }
+    stage = 'Stripe Checkout request'
     const stripe = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST', headers: { Authorization: `Bearer ${stripeKey}`, 'Content-Type': 'application/x-www-form-urlencoded' },
       body: params, cache: 'no-store',
     })
-    if (!stripe.ok) return NextResponse.json({ error: 'Could not start checkout. Please try again.' }, { status: 502 })
+    if (!stripe.ok) {
+      const details = await stripe.json().catch(() => null) as {
+        error?: { type?: string; code?: string; param?: string; message?: string }
+      } | null
+      const issue = details?.error
+      // Log only Stripe's error fields; never log keys, quiz answers, or intake text.
+      console.error('Report checkout: Stripe rejected session', {
+        status: stripe.status, type: issue?.type, code: issue?.code, param: issue?.param,
+        message: issue?.message, requestId: stripe.headers.get('request-id'),
+      })
+      const reason = [issue?.code || issue?.type, issue?.param ? `parameter ${issue.param}` : null]
+        .filter(Boolean).join(', ')
+      return NextResponse.json({
+        error: process.env.VERCEL_ENV === 'preview'
+          ? `Stripe could not create checkout (HTTP ${stripe.status}${reason ? `, ${reason}` : ''}). Check the matching request in Stripe test logs.`
+          : 'Could not start checkout. Please try again.',
+      }, { status: 502 })
+    }
+    stage = 'Stripe Checkout response'
     const session = await stripe.json() as { url?: string }
     if (!session.url || !session.url.startsWith('https://checkout.stripe.com/')) throw new Error('Missing checkout URL')
     return NextResponse.json({ url: session.url })
-  } catch {
-    return NextResponse.json({ error: 'Could not start checkout. Please try again.' }, { status: 502 })
+  } catch (error) {
+    // Never log the request body or credentials.
+    console.error('Report checkout failed', { stage, message: error instanceof Error ? error.message : 'Unknown error' })
+    return NextResponse.json({
+      error: process.env.VERCEL_ENV === 'preview'
+        ? `Checkout failed during ${stage}. Check Vercel Runtime Logs for /api/report/checkout.`
+        : 'Could not start checkout. Please try again.',
+    }, { status: 502 })
   }
 }
