@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
       // Log only Stripe's error fields; never log keys, quiz answers, or intake text.
       console.error('Report checkout: Stripe rejected session', {
         status: stripe.status, type: issue?.type, code: issue?.code, param: issue?.param,
-        message: issue?.message, requestId: stripe.headers.get('request-id'),
+        requestId: stripe.headers.get('request-id'),
       })
       const reason = [issue?.code || issue?.type, issue?.param ? `parameter ${issue.param}` : null]
         .filter(Boolean).join(', ')
@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url: session.url })
   } catch (error) {
     // Never log the request body or credentials.
-    console.error('Report checkout failed', { stage, message: error instanceof Error ? error.message : 'Unknown error' })
+    console.error('Report checkout failed', { stage, errorType: error instanceof Error ? error.name : 'Unknown' })
     return NextResponse.json({
       error: process.env.VERCEL_ENV === 'preview'
         ? `Checkout failed during ${stage}. Check Vercel Runtime Logs for /api/report/checkout.`
