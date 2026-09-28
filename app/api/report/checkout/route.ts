@@ -114,11 +114,18 @@ export async function POST(req: NextRequest) {
     if (!session.url || !session.url.startsWith('https://checkout.stripe.com/')) throw new Error('Missing checkout URL')
     return NextResponse.json({ url: session.url })
   } catch (error) {
-    // Never log the request body or credentials.
-    console.error('Report checkout failed', { stage, errorType: error instanceof Error ? error.name : 'Unknown' })
+    // Never log the request body, credentials, or upstream response body.
+    const errorType = error instanceof Error ? error.name : 'Unknown'
+    console.error('Report checkout failed', { stage, errorType })
+    const storageIssue = stage === 'report storage (Upstash)'
+      ? errorType.startsWith('UpstashHTTP') ? `Upstash returned HTTP ${errorType.slice('UpstashHTTP'.length)}`
+        : errorType === 'UpstashCommandError' ? 'Upstash rejected the SET command'
+          : errorType === 'TypeError' ? 'could not connect to Upstash'
+            : 'unknown storage error'
+      : null
     return NextResponse.json({
       error: process.env.VERCEL_ENV === 'preview'
-        ? `Checkout failed during ${stage}. Check Vercel Runtime Logs for /api/report/checkout.`
+        ? storageIssue ? `Checkout failed during report storage: ${storageIssue}.` : `Checkout failed during ${stage}. Check Vercel Runtime Logs for /api/report/checkout.`
         : 'Could not start checkout. Please try again.',
     }, { status: 502 })
   }
