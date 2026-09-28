@@ -8,37 +8,37 @@ export const contentType = 'image/png'
 
 const AREA_META: Record<string, {
   name: string; hex: string; light: string;
-  tagline: string; icon: string; emoji: string
+  tagline: string; icon: string
 }> = {
   mind: {
     name: 'Mind', hex: '#f97316', light: '#fff7ed',
     tagline: 'Unlock your full cognitive potential',
-    icon: 'icon-mind.png', emoji: '🧠',
+    icon: 'icon-mind.png',
   },
   body: {
     name: 'Body', hex: '#ef4444', light: '#fef2f2',
     tagline: 'Build your physical foundation',
-    icon: 'icon-body.png', emoji: '💪',
+    icon: 'icon-body.png',
   },
   spirit: {
     name: 'Spirit', hex: '#eab308', light: '#fefce8',
     tagline: 'Connect with your deepest self',
-    icon: 'icon-spirit.png', emoji: '✨',
+    icon: 'icon-spirit.png',
   },
   relationships: {
     name: 'Relationships', hex: '#3b82f6', light: '#eff6ff',
     tagline: 'Build deep, meaningful connections',
-    icon: 'icon-relationships.png', emoji: '❤️',
+    icon: 'icon-relationships.png',
   },
   money: {
     name: 'Money', hex: '#22c55e', light: '#f0fdf4',
     tagline: 'Create financial freedom and abundance',
-    icon: 'icon-money.png', emoji: '💰',
+    icon: 'icon-money.png',
   },
   direction: {
     name: 'Direction', hex: '#a855f7', light: '#faf5ff',
     tagline: 'Live with clarity, purpose, and momentum',
-    icon: 'icon-direction.png', emoji: '🧭',
+    icon: 'icon-direction.png',
   },
 }
 
@@ -150,7 +150,7 @@ export default async function Image({ params }: { params: Promise<{ area: string
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           }}>
             <div style={{
-              width: 220, height: 220, borderRadius: 40,
+              width: 220, height: 220, borderRadius: '50%',
               backgroundColor: m.light,
               border: `2px solid ${m.hex}30`,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -159,7 +159,7 @@ export default async function Image({ params }: { params: Promise<{ area: string
               {iconSrc
                 // eslint-disable-next-line @next/next/no-img-element
                 ? <img src={iconSrc} width={160} height={160} alt="" style={{ objectFit: 'contain' }} />
-                : <span style={{ fontSize: 100 }}>{m.emoji}</span>}
+                : <span style={{ fontSize: 28, color: m.hex, fontWeight: 700 }}>{m.name}</span>}
             </div>
 
             {/* Score ring hint */}
