@@ -83,8 +83,6 @@ export default function QuizPage() {
     } else {
       setCompleting(true)
       const results = calculateResults(newAnswers)
-      for (const area of AREA_ORDER) localStorage.removeItem(`deepDiveResults_${area}`)
-      localStorage.removeItem('lifebalance_report_intake')
       localStorage.setItem('lifebalance_results', JSON.stringify(results))
       localStorage.setItem('lifebalance_answers', JSON.stringify(newAnswers))
       trackEvent('quiz_complete')
