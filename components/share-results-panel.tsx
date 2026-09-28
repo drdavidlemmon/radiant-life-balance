@@ -27,11 +27,6 @@ const AREA_NAMES: Record<AreaKey, string> = {
   relationships: 'Relationships', money: 'Money', direction: 'Direction',
 }
 
-const AREA_EMOJI: Record<AreaKey, string> = {
-  mind: '🧠', body: '💪', spirit: '✨',
-  relationships: '❤️', money: '💰', direction: '🧭',
-}
-
 interface Props {
   results: QuizResults
 }
@@ -45,11 +40,11 @@ export function ShareResultsPanel({ results }: Props) {
   const quizUrl = typeof window !== 'undefined' ? `${window.location.origin}/quiz` : 'https://radiantlifebalance.com/quiz'
 
   // Build personalised share text
-  const areaLine = top2.map(k => `${AREA_EMOJI[k]} ${AREA_NAMES[k]}: ${results.scores[k]}%`).join('  |  ')
+  const areaLine = top2.map(k => `${AREA_NAMES[k]}: ${results.scores[k]}%`).join('  |  ')
 
-  const tweetText = `I just took the Radiant Life Balance Assessment by Dr. Lemmon!\n\nMy overall score: ${overall}%\nTop areas to work on:\n${top2.map(k => `${AREA_EMOJI[k]} ${AREA_NAMES[k]} (${results.scores[k]}%)`).join('\n')}\n\nFind out YOUR life balance score — free 30-question quiz:`
+  const tweetText = `I just took the Radiant Life Balance Assessment by Dr. Lemmon!\n\nMy overall score: ${overall}%\nTop areas to work on:\n${top2.map(k => `${AREA_NAMES[k]} (${results.scores[k]}%)`).join('\n')}\n\nFind out YOUR life balance score — free 30-question quiz:`
 
-  const longText = `I just took the Radiant Life Balance Assessment by Dr. Lemmon and got some really eye-opening results!\n\nMy overall life balance score: ${overall}%\n\nMy top priority areas:\n${top2.map(k => `${AREA_EMOJI[k]} ${AREA_NAMES[k]}: ${results.scores[k]}%`).join('\n')}\n\nThe quiz covers 6 areas of life: Mind, Body, Spirit, Relationships, Money and Direction. Takes about 5 minutes and the results are surprisingly accurate.\n\nTake the free quiz here: ${quizUrl}`
+  const longText = `I just took the Radiant Life Balance Assessment by Dr. Lemmon and got some really eye-opening results!\n\nMy overall life balance score: ${overall}%\n\nMy top priority areas:\n${top2.map(k => `${AREA_NAMES[k]}: ${results.scores[k]}%`).join('\n')}\n\nThe quiz covers 6 areas of life: Mind, Body, Spirit, Relationships, Money and Direction. Takes about 5 minutes and the results are surprisingly accurate.\n\nTake the free quiz here: ${quizUrl}`
 
   const emailSubject = `My Radiant Life Balance results — and a quiz for you`
   const emailBody = longText
