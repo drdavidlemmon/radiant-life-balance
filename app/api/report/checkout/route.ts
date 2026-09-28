@@ -22,13 +22,23 @@ export async function POST(req: NextRequest) {
   try {
     const body: unknown = await req.json()
     const input = body as Partial<ReportOrderInput> & { coupon?: unknown }
-    if (!isQuizResults(input?.results) || !input.answers ||
+    if (!isQuizResults(input?.results)) {
+      return NextResponse.json({ error: 'Your saved main quiz results are incomplete. Please retake the 30-question quiz on this test site.' }, { status: 400 })
+    }
+    if (!input.answers || typeof input.answers !== 'object' ||
       Object.keys(input.answers).length !== quizQuestions.length ||
-      !quizQuestions.every(q => Number.isInteger(input.answers?.[q.id]) && Number(input.answers?.[q.id]) >= 1 && Number(input.answers?.[q.id]) <= 5) ||
-      !isReportIntake(input.intake) || !input.deepDives ||
-      !input.results.priorities.slice(0, 2).every(area => isDeepDiveInput(input.deepDives?.[area], area)) ||
-      JSON.stringify(body).length > 30000) {
-      return NextResponse.json({ error: 'Complete the quiz, both priority deep dives, and the report questions before checkout.' }, { status: 400 })
+      !quizQuestions.every(q => Number.isInteger(input.answers?.[q.id]) &&
+        Number(input.answers?.[q.id]) >= 1 && Number(input.answers?.[q.id]) <= 5)) {
+      return NextResponse.json({ error: 'Your original 30 quiz answers are missing or incomplete on this test site. Please retake the main quiz.' }, { status: 400 })
+    }
+    if (!isReportIntake(input.intake)) {
+      return NextResponse.json({ error: 'One or more report questions are missing or too long. Please review the required fields.' }, { status: 400 })
+    }
+    if (!input.deepDives || !input.results.priorities.slice(0, 2).every(area => isDeepDiveInput(input.deepDives?.[area], area))) {
+      return NextResponse.json({ error: 'A priority deep dive is missing or incomplete on this test site. Please open both deep dives from this results page.' }, { status: 400 })
+    }
+    if (JSON.stringify(body).length > 30000) {
+      return NextResponse.json({ error: 'The report answers are too long. Please shorten the text responses.' }, { status: 400 })
     }
     const coupon = typeof input.coupon === 'string' ? input.coupon.trim() : ''
     if ((input.coupon !== undefined && typeof input.coupon !== 'string') || coupon.length > 64) {
