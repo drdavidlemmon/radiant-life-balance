@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import { deepDiveQuestions } from '@/lib/deep-dive-data'
 import { areasData } from '@/lib/areas-data'
 import type { AreaKey } from '@/types'
@@ -16,12 +17,12 @@ const OPTS = [
 ]
 
 const AREA_META: Record<AreaKey, { hex: string; light: string; icon: string }> = {
-  body:          { hex: '#ef4444', light: '#fef2f2', icon: '❤️' },
-  mind:          { hex: '#8b5cf6', light: '#f5f3ff', icon: '🧠' },
-  spirit:        { hex: '#f59e0b', light: '#fffbeb', icon: '✨' },
-  relationships: { hex: '#ec4899', light: '#fdf2f8', icon: '💞' },
-  money:         { hex: '#10b981', light: '#ecfdf5', icon: '💰' },
-  direction:     { hex: '#3b82f6', light: '#eff6ff', icon: '🧭' },
+  mind:          { hex: '#f97316', light: '#fff7ed', icon: '/icon-mind.png' },
+  body:          { hex: '#ef4444', light: '#fef2f2', icon: '/icon-body.png' },
+  spirit:        { hex: '#eab308', light: '#fefce8', icon: '/icon-spirit.png' },
+  relationships: { hex: '#3b82f6', light: '#eff6ff', icon: '/icon-relationships.png' },
+  money:         { hex: '#22c55e', light: '#f0fdf4', icon: '/icon-money.png' },
+  direction:     { hex: '#a855f7', light: '#faf5ff', icon: '/icon-direction.png' },
 }
 
 export default function DeepDivePage() {
@@ -100,7 +101,7 @@ export default function DeepDivePage() {
             ← Back
           </button>
           <div className="flex items-center gap-2">
-            <span className="text-base">{meta.icon}</span>
+            <Image src={meta.icon} alt="" width={32} height={32} className="h-8 w-8 rounded-full object-contain" />
             <span className="font-semibold text-gray-800 capitalize">{areaName} Deep Dive</span>
           </div>
           <span className="text-sm text-gray-500 font-mono">{current + 1} / {total}</span>
