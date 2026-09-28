@@ -11,8 +11,16 @@ export async function redisCommand<T>(...parts: (string | number)[]): Promise<T>
     body: JSON.stringify(parts),
     cache: 'no-store',
   })
-  if (!response.ok) throw new Error('Report storage request failed')
+  if (!response.ok) {
+    const error = new Error('Report storage request failed')
+    error.name = `UpstashHTTP${response.status}`
+    throw error
+  }
   const data = await response.json() as { result: T; error?: string }
-  if (data.error) throw new Error('Report storage command failed')
+  if (data.error) {
+    const error = new Error('Report storage command failed')
+    error.name = 'UpstashCommandError'
+    throw error
+  }
   return data.result
 }
