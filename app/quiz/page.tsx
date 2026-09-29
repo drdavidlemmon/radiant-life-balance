@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft } from 'lucide-react'
@@ -61,6 +61,21 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<Record<string, number>>({})
   const [current, setCurrent] = useState(0)
   const [completing, setCompleting] = useState(false)
+  const advancingRef = useRef(false)
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('lifebalance_answers') || '{}') as Record<string, unknown>
+      const restored = Object.fromEntries(quizQuestions
+        .filter(question => Number.isInteger(saved?.[question.id]) && Number(saved[question.id]) >= 1 && Number(saved[question.id]) <= 5)
+        .map(question => [question.id, saved[question.id] as number]))
+      if (Object.keys(restored).length > 0) {
+        setAnswers(restored)
+        const firstMissing = quizQuestions.findIndex(question => restored[question.id] === undefined)
+        if (firstMissing >= 0) setCurrent(firstMissing)
+      }
+    } catch { /* Start a fresh quiz if previous browser data is invalid. */ }
+  }, [])
 
   const q = quizQuestions[current]
   const answered = answers[q?.id]
@@ -75,20 +90,29 @@ export default function QuizPage() {
   })
 
   const handleAnswer = useCallback((val: number) => {
+    if (advancingRef.current || completing) return
+    advancingRef.current = true
     if (Object.keys(answers).length === 0) trackEvent('quiz_start')
     const newAnswers = { ...answers, [q.id]: val }
     setAnswers(newAnswers)
-    if (current < total - 1) {
-      setTimeout(() => setCurrent((c) => c + 1), 280)
-    } else {
-      setCompleting(true)
-      const results = calculateResults(newAnswers)
-      localStorage.setItem('lifebalance_results', JSON.stringify(results))
-      localStorage.setItem('lifebalance_answers', JSON.stringify(newAnswers))
-      trackEvent('quiz_complete')
-      setTimeout(() => router.push('/results'), 1800)
+    // Save each answer so a refresh or preview switch cannot silently lose progress.
+    localStorage.setItem('lifebalance_answers', JSON.stringify(newAnswers))
+    const nextQuestion = current < total - 1
+      ? current + 1
+      : quizQuestions.findIndex(question => newAnswers[question.id] === undefined)
+    if (nextQuestion >= 0) {
+      setTimeout(() => {
+        setCurrent(nextQuestion)
+        advancingRef.current = false
+      }, 280)
+      return
     }
-  }, [answers, current, q, total, router])
+    setCompleting(true)
+    const results = calculateResults(newAnswers)
+    localStorage.setItem('lifebalance_results', JSON.stringify(results))
+    trackEvent('quiz_complete')
+    setTimeout(() => router.push('/results'), 1800)
+  }, [answers, completing, current, q, total, router])
 
   if (completing) {
     return (
@@ -167,7 +191,7 @@ export default function QuizPage() {
               {OPTS.map((opt) => {
                 const isSelected = answered === opt.value
                 return (
-                  <button key={opt.value} type="button" onClick={() => handleAnswer(opt.value)}
+                  <button key={opt.value} type="button" onClick={() => handleAnswer(opt.value)} disabled={completing || advancingRef.current}
                     aria-label={`${opt.value}: ${opt.label}`} aria-pressed={isSelected}
                     className="flex min-w-0 flex-col items-center gap-2 rounded-xl px-0.5 py-2 text-center transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                     style={{ outlineColor: area?.hex }}>
