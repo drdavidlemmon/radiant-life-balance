@@ -5,12 +5,14 @@ import Link from 'next/link'
 import type { QuizResults, AreaKey } from '@/types'
 import type { PremiumReport } from '@/lib/premium-report'
 import { intakeFields, isDeepDiveInput, type ReportIntake } from '@/lib/report-intake'
+import { quizQuestions } from '@/lib/quiz-data'
 
 type Payload = { report: PremiumReport; results: QuizResults; resources: Record<AreaKey, { title: string; type: string; url: string }[]> }
 
 export function PremiumReportOffer({ results, isDemo }: { results: QuizResults; isDemo: boolean }) {
   const query = useSearchParams()
   const [status, setStatus] = useState('')
+  const [quizNeedsFinishing, setQuizNeedsFinishing] = useState(false)
   const [report, setReport] = useState<Payload | null>(null)
   const [busy, setBusy] = useState(false)
   const [coupon, setCoupon] = useState('')
@@ -72,9 +74,17 @@ export function PremiumReportOffer({ results, isDemo }: { results: QuizResults; 
       setStatus(`Before checkout, please ${steps.join(' and ')} above.`)
       return
     }
-    setBusy(true); setStatus('')
+    setBusy(true); setStatus(''); setQuizNeedsFinishing(false)
     try {
-      const answers = JSON.parse(localStorage.getItem('lifebalance_answers') || '{}')
+      const answers = JSON.parse(localStorage.getItem('lifebalance_answers') || '{}') as Record<string, unknown>
+      const unanswered = quizQuestions.filter(question =>
+        !Number.isInteger(answers?.[question.id]) || Number(answers[question.id]) < 1 || Number(answers[question.id]) > 5)
+      if (unanswered.length > 0) {
+        setStatus(`Your main quiz has ${unanswered.length} unanswered question${unanswered.length === 1 ? '' : 's'}. Continue the quiz to finish them.`)
+        setQuizNeedsFinishing(true)
+        setBusy(false)
+        return
+      }
       const deepDives = Object.fromEntries(results.priorities.slice(0, 2).map(area => {
         const raw = localStorage.getItem(`deepDiveResults_${area}`)
         return [area, raw ? JSON.parse(raw) : null]
@@ -136,6 +146,7 @@ export function PremiumReportOffer({ results, isDemo }: { results: QuizResults; 
       </p>
     )}
     {status && <p role="status" className="text-sm text-slate-700 mt-4">{status}</p>}
+    {quizNeedsFinishing && <Link href="/quiz" className="inline-block mt-2 text-sm font-semibold text-purple-800 underline">Continue the main quiz</Link>}
     <p className="text-xs text-slate-500 mt-4">AI-generated education for self-reflection; not professional advice. Results are stored temporarily for 30 days. Your free results remain available.</p>
   </section>
 }
