@@ -79,7 +79,7 @@ export function PremiumReportPDF({ report, results, resources, evidence }: Props
     {results.priorities.map((area, i) => {
       const plan = report.areaPlans.find(a => a.area === area)!
       const profile = evidence?.[area]
-      const product = resources[area]?.find(item => item.id === plan.recommendation?.resourceId)
+      const product = i === 0 ? resources[area]?.find(item => item.id === plan.recommendation?.resourceId) : undefined
       return <Frame key={area} title={`${display[area]}: your next steps`} area={area}>
         <Text style={[s.score, { color: inks[area] }]}>Priority #{i + 1}  /  Area score: {results.scores[area]}%</Text>
         {profile && <View style={[s.evidence, { borderLeftColor: colors[area] }]} wrap={false}>
@@ -99,7 +99,7 @@ export function PremiumReportPDF({ report, results, resources, evidence }: Props
       </Frame>
     })}
     <Frame title="Reading and tools picked for you">
-      <Text style={s.small}>Your best-fit affiliate resources appear beside each area's first steps. The free articles below offer another way to begin. Purchases are optional; links may earn us a commission.</Text>
+      <Text style={s.small}>Your one best-fit affiliate resource appears beside your number-one priority area's first steps. The free articles below offer another way to begin. Purchases are optional; links may earn us a commission.</Text>
       {results.priorities.map(area => <View key={area} style={s.band} wrap={false}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}><Image src={asset(`/icon-${area}.png`)} style={s.smallIcon} /><Text style={[s.subtitle, { color: inks[area] }]}>{display[area]}</Text></View>
         {(resources[area] || []).filter(item => item.type === 'Article').slice(0, 2).map(item => <ResourceLink key={item.id} item={item} />)}
