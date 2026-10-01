@@ -84,7 +84,7 @@ export function productsForArea(area: AreaKey): ReportResource[] {
 
 export function resourcesForReport(report: PremiumReport, results: QuizResults): Record<AreaKey, ReportResource[]> {
   return Object.fromEntries(results.priorities.map(area => {
-    const selected = report.areaPlans.find(plan => plan.area === area)?.recommendation?.resourceId
+    const selected = area === results.priorities[0] ? report.areaPlans.find(plan => plan.area === area)?.recommendation?.resourceId : undefined
     const product = productsForArea(area).find(item => item.id === selected)
     const articles = resourcesForArea(area, results).filter(item => item.type === 'Article')
       .map((item, index) => ({ ...item, id: `${area}:article:${index}` }))
@@ -92,11 +92,9 @@ export function resourcesForReport(report: PremiumReport, results: QuizResults):
   })) as Record<AreaKey, ReportResource[]>
 }
 
-export function hasValidRecommendations(report: PremiumReport): boolean {
-  return report.areaPlans.every(plan => {
-    const rec = plan.recommendation
-    return rec && productsForArea(plan.area).some(product => product.id === rec.resourceId) &&
-      typeof rec.why === 'string' && rec.why.trim().length > 20 && rec.why.length < 2000 &&
-      typeof rec.howToUse === 'string' && rec.howToUse.trim().length > 20 && rec.howToUse.length < 2000
-  })
+export function hasValidRecommendations(report: PremiumReport, priorityArea: AreaKey): boolean {
+  const rec = report.areaPlans.find(plan => plan.area === priorityArea)?.recommendation
+  return Boolean(rec && productsForArea(priorityArea).some(product => product.id === rec.resourceId) &&
+    typeof rec.why === 'string' && rec.why.trim().length > 20 && rec.why.length < 2000 &&
+    typeof rec.howToUse === 'string' && rec.howToUse.trim().length > 20 && rec.howToUse.length < 2000)
 }
