@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import type { QuizResults, AreaKey } from '@/types'
-import type { PremiumReport } from '@/lib/premium-report'
+import type { AreaEvidence, PremiumReport, ReportResource } from '@/lib/premium-report'
 import { intakeFields, isDeepDiveInput, type ReportIntake } from '@/lib/report-intake'
 import { quizQuestions } from '@/lib/quiz-data'
 
-type Payload = { report: PremiumReport; results: QuizResults; resources: Record<AreaKey, { title: string; type: string; url: string }[]> }
+type Payload = { report: PremiumReport; results: QuizResults; resources: Record<AreaKey, ReportResource[]>; evidence?: Record<AreaKey, AreaEvidence> }
 
 export function PremiumReportOffer({ results, isDemo }: { results: QuizResults; isDemo: boolean }) {
   const query = useSearchParams()
@@ -150,3 +150,4 @@ export function PremiumReportOffer({ results, isDemo }: { results: QuizResults; 
     <p className="text-xs text-slate-500 mt-4">AI-generated education for self-reflection; not professional advice. Results are stored temporarily for 30 days. Your free results remain available.</p>
   </section>
 }
+
