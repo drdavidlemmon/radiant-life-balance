@@ -103,7 +103,7 @@ export function ShareResultsPanel({ results }: Props) {
       </div>
 
       {/* Branded summary: celebrate a strength before introducing a growth opportunity. */}
-      <div className="rounded-2xl p-5 sm:p-6 mb-5 border border-purple-100 bg-gradient-to-br from-purple-50 via-white to-blue-50 font-sans">
+      <div className="rounded-2xl p-5 sm:p-6 mb-5 border border-purple-100 bg-gradient-to-br from-purple-50 via-white to-blue-50" style={{ fontFamily: 'var(--font-inter), Arial, sans-serif' }}>
         <div className="flex items-center gap-3 mb-5">
           <Image src="/logo.png" alt="Radiant Life Balance flower logo" width={46} height={46} className="object-contain flex-shrink-0" />
           <div>
