@@ -47,7 +47,7 @@ async function main() {
     if (String(url).includes('upstash.io')) {
       const command = JSON.parse(String(init?.body)) as string[]
       if (command[0] === 'GET') return Response.json({ result: command[1].includes('report:input:') ? JSON.stringify(input) : cached })
-      if (command[0] === 'SET' && command[1].includes('output:v2:')) cached = command[2]
+      if (command[0] === 'SET' && command[1].includes('report:output:')) cached = command[2]
       return Response.json({ result: 'OK' })
     }
     aiCalls++
