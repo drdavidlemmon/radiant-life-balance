@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { Share2, Copy, Check, Mail, Facebook, Users } from 'lucide-react'
 import { QuizResults, AreaKey } from '@/types'
 import { ShareImageButton } from '@/components/share-image-button'
@@ -35,22 +36,26 @@ export function ShareResultsPanel({ results }: Props) {
   const [copied, setCopied] = useState(false)
   const [copiedMsg, setCopiedMsg] = useState(false)
 
-  const overall = Math.round(Object.values(results.scores).reduce((a, b) => a + b, 0) / 6)
-  const top2 = results.priorities.slice(0, 2) as AreaKey[]
+  const highestScore = Math.max(...Object.values(results.scores))
+  const lowestScore = Math.min(...Object.values(results.scores))
+  const strongest = [...results.priorities].reverse().find(area => results.scores[area] === highestScore)!
+  const improvement = results.priorities.find(area => results.scores[area] === lowestScore)!
+  const strongestTied = Object.values(results.scores).filter(score => score === highestScore).length > 1
+  const lowestTied = Object.values(results.scores).filter(score => score === lowestScore).length > 1
+  const allEqual = highestScore === lowestScore
   const quizUrl = typeof window !== 'undefined' ? `${window.location.origin}/quiz` : 'https://radiantlifebalance.com/quiz'
-
-  // Build personalised share text
-  const areaLine = top2.map(k => `${AREA_NAMES[k]}: ${results.scores[k]}%`).join('  |  ')
-
-  const tweetText = `I just took the Radiant Life Balance Assessment by Dr. Lemmon!\n\nMy overall score: ${overall}%\nTop areas to work on:\n${top2.map(k => `${AREA_NAMES[k]} (${results.scores[k]}%)`).join('\n')}\n\nFind out YOUR life balance score — free 30-question quiz:`
-
-  const longText = `I just took the Radiant Life Balance Assessment by Dr. Lemmon and got some really eye-opening results!\n\nMy overall life balance score: ${overall}%\n\nMy top priority areas:\n${top2.map(k => `${AREA_NAMES[k]}: ${results.scores[k]}%`).join('\n')}\n\nThe quiz covers 6 areas of life: Mind, Body, Spirit, Relationships, Money and Direction. Takes about 5 minutes and the results are surprisingly accurate.\n\nTake the free quiz here: ${quizUrl}`
+  const strengthLabel = strongestTied ? 'One of my strongest areas' : 'My strongest area'
+  const growthLabel = allEqual ? 'An area I can keep building on' : lowestTied ? 'One of my greatest opportunities for improvement' : 'My greatest opportunity for improvement'
+  const strengthLine = `${strengthLabel} was ${AREA_NAMES[strongest]} at ${highestScore}%.`
+  const growthLine = allEqual ? `All six areas tied at ${highestScore}%; I can keep growing in each one.` : `${growthLabel} was ${AREA_NAMES[improvement]} at ${lowestScore}%.`
+  const tweetText = `I took the Radiant Life Balance quiz!\n\n${strengthLine}\n${growthLine}\n\nWhat is your strongest area? Take the free quiz:`
+  const longText = `${tweetText}\n${quizUrl}`
 
   const emailSubject = `My Radiant Life Balance results — and a quiz for you`
   const emailBody = longText
 
   const twitterHref = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(quizUrl)}`
-  const facebookHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(quizUrl)}&quote=${encodeURIComponent(`I scored ${overall}% on the Radiant Life Balance quiz! ${areaLine}. Find out your score:`)}`
+  const facebookHref = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(quizUrl)}&quote=${encodeURIComponent(`${strengthLine} ${growthLine} Find out your strongest area:`)}`
   const whatsappHref = `https://wa.me/?text=${encodeURIComponent(longText)}`
   const emailHref = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
 
@@ -97,15 +102,37 @@ export function ShareResultsPanel({ results }: Props) {
         )}
       </div>
 
-      {/* Score preview card — what friends will see */}
-      <div className="bg-gradient-to-br from-purple-50 via-blue-50 to-green-50 rounded-xl p-4 mb-5 border border-purple-100">
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Your shareable summary</p>
-        <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-line font-mono bg-white/60 rounded-lg p-3 text-xs">
-          {tweetText}
-        </p>
+      {/* Branded summary: celebrate a strength before introducing a growth opportunity. */}
+      <div className="rounded-2xl p-5 sm:p-6 mb-5 border border-purple-100 bg-gradient-to-br from-purple-50 via-white to-blue-50 font-sans">
+        <div className="flex items-center gap-3 mb-5">
+          <Image src="/logo.png" alt="Radiant Life Balance flower logo" width={46} height={46} className="object-contain flex-shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-purple-800">Radiant Life Balance</p>
+            <p className="text-xs text-slate-500">Your shareable summary</p>
+          </div>
+        </div>
+        <div className="rounded-xl bg-white border border-slate-100 p-4 sm:p-5">
+          <p className="text-sm sm:text-base font-medium text-slate-600 mb-3">{strengthLabel}</p>
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Image src={`/icon-${strongest}.png`} alt={AREA_NAMES[strongest]} width={64} height={64} className="object-contain flex-shrink-0" />
+            <div className="min-w-0">
+              <p className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 break-words">{AREA_NAMES[strongest]}</p>
+              <p className="text-3xl sm:text-4xl font-bold tracking-tight text-purple-800">{highestScore}%</p>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-3 mt-4 px-1">
+          <Image src={`/icon-${improvement}.png`} alt={AREA_NAMES[improvement]} width={42} height={42} className="object-contain flex-shrink-0" />
+          <div className="min-w-0">
+            <p className="text-sm text-slate-600 leading-relaxed">{growthLabel}</p>
+            <p className="text-base font-semibold text-slate-800">{AREA_NAMES[improvement]} · {lowestScore}%</p>
+            {allEqual && <p className="text-xs text-slate-500 mt-1">All six areas have the same score.</p>}
+          </div>
+        </div>
+        <p className="text-sm text-slate-600 mt-5 leading-relaxed">What is your strongest area? Take the free Life Balance quiz and find out.</p>
         <button onClick={copyMessage}
-          className="mt-2 inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800 transition-colors font-medium">
-          {copiedMsg ? <><Check className="w-3.5 h-3.5 text-green-500" /> Copied!</> : <><Copy className="w-3.5 h-3.5" /> Copy message</>}
+          className="mt-3 inline-flex items-center gap-1.5 text-sm text-purple-700 hover:text-purple-900 transition-colors font-medium">
+          {copiedMsg ? <><Check className="w-4 h-4 text-green-600" /> Copied!</> : <><Copy className="w-4 h-4" /> Copy message</>}
         </button>
       </div>
 
