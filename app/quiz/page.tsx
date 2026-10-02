@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, CheckCircle } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 import { quizQuestions } from '@/lib/quiz-data'
 import Image from 'next/image'
 import { AreaKey, QuizResults } from '@/types'
+import { trackEvent } from '@/lib/analytics'
 
 const AREA_META: Record<AreaKey, { name: string; icon: string; hex: string; light: string; text: string }> = {
   mind:          { name: 'Mind',          icon: '/icon-mind.png',          hex: '#f97316', light: '#fff7ed', text: '#c2410c' },
@@ -19,11 +20,11 @@ const AREA_META: Record<AreaKey, { name: string; icon: string; hex: string; ligh
 const AREA_ORDER: AreaKey[] = ['body', 'mind', 'spirit', 'direction', 'relationships', 'money']
 
 const OPTS = [
-  { value: 1, label: 'False',        sub: 'This is not like me at all' },
-  { value: 2, label: 'Mostly False', sub: 'Rarely true for me' },
-  { value: 3, label: 'Neutral',      sub: 'Sometimes true' },
-  { value: 4, label: 'Mostly True',  sub: 'Often true for me' },
-  { value: 5, label: 'True',         sub: 'This is definitely me' },
+  { value: 1, label: 'False' },
+  { value: 2, label: 'Mostly false' },
+  { value: 3, label: 'Neutral' },
+  { value: 4, label: 'Mostly true' },
+  { value: 5, label: 'True' },
 ]
 
 function calculateResults(answers: Record<string, number>): QuizResults {
@@ -60,6 +61,21 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<Record<string, number>>({})
   const [current, setCurrent] = useState(0)
   const [completing, setCompleting] = useState(false)
+  const advancingRef = useRef(false)
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('lifebalance_answers') || '{}') as Record<string, unknown>
+      const restored = Object.fromEntries(quizQuestions
+        .filter(question => Number.isInteger(saved?.[question.id]) && Number(saved[question.id]) >= 1 && Number(saved[question.id]) <= 5)
+        .map(question => [question.id, saved[question.id] as number]))
+      if (Object.keys(restored).length > 0) {
+        setAnswers(restored)
+        const firstMissing = quizQuestions.findIndex(question => restored[question.id] === undefined)
+        if (firstMissing >= 0) setCurrent(firstMissing)
+      }
+    } catch { /* Start a fresh quiz if previous browser data is invalid. */ }
+  }, [])
 
   const q = quizQuestions[current]
   const answered = answers[q?.id]
@@ -74,17 +90,29 @@ export default function QuizPage() {
   })
 
   const handleAnswer = useCallback((val: number) => {
+    if (advancingRef.current || completing) return
+    advancingRef.current = true
+    if (Object.keys(answers).length === 0) trackEvent('quiz_start')
     const newAnswers = { ...answers, [q.id]: val }
     setAnswers(newAnswers)
-    if (current < total - 1) {
-      setTimeout(() => setCurrent((c) => c + 1), 280)
-    } else {
-      setCompleting(true)
-      const results = calculateResults(newAnswers)
-      localStorage.setItem('lifebalance_results', JSON.stringify(results))
-      setTimeout(() => router.push('/results'), 1800)
+    // Save each answer so a refresh or preview switch cannot silently lose progress.
+    localStorage.setItem('lifebalance_answers', JSON.stringify(newAnswers))
+    const nextQuestion = current < total - 1
+      ? current + 1
+      : quizQuestions.findIndex(question => newAnswers[question.id] === undefined)
+    if (nextQuestion >= 0) {
+      setTimeout(() => {
+        setCurrent(nextQuestion)
+        advancingRef.current = false
+      }, 280)
+      return
     }
-  }, [answers, current, q, total, router])
+    setCompleting(true)
+    const results = calculateResults(newAnswers)
+    localStorage.setItem('lifebalance_results', JSON.stringify(results))
+    trackEvent('quiz_complete')
+    setTimeout(() => router.push('/results'), 1800)
+  }, [answers, completing, current, q, total, router])
 
   if (completing) {
     return (
@@ -155,29 +183,28 @@ export default function QuizPage() {
             <p className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-3">
               How true is the following for you right now?
             </p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-10">
+            <h2 id="quiz-question" className="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug mb-8">
               &ldquo;{q.question}&rdquo;
             </h2>
 
-            <div className="space-y-2.5">
+            <div role="group" aria-labelledby="quiz-question" className="grid grid-cols-5 gap-1.5 sm:gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-2 sm:p-5">
               {OPTS.map((opt) => {
                 const isSelected = answered === opt.value
                 return (
-                  <button key={opt.value} onClick={() => handleAnswer(opt.value)}
-                    className="w-full flex items-center gap-4 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-150 hover:-translate-y-0.5"
-                    style={{
-                      background: isSelected ? area?.light : 'white',
-                      borderColor: isSelected ? area?.hex : '#e2e8f0',
-                      boxShadow: isSelected ? `0 0 0 3px ${area?.hex}20` : '0 1px 2px rgba(0,0,0,0.04)',
-                    }}>
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-all"
-                      style={{ background: isSelected ? area?.hex : '#f1f5f9', color: isSelected ? 'white' : '#64748b' }}>
-                      {isSelected ? <CheckCircle className="w-4 h-4" /> : opt.value}
-                    </div>
-                    <div>
-                      <div className="font-semibold text-slate-900 text-sm">{opt.label}</div>
-                      <div className="text-slate-400 text-xs mt-0.5">{opt.sub}</div>
-                    </div>
+                  <button key={opt.value} type="button" onClick={() => handleAnswer(opt.value)} disabled={completing || advancingRef.current}
+                    aria-label={`${opt.value}: ${opt.label}`} aria-pressed={isSelected}
+                    className="flex min-w-0 flex-col items-center gap-2 rounded-xl px-0.5 py-2 text-center transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                    style={{ outlineColor: area?.hex }}>
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full border-2 text-base font-bold tabular-nums transition-all sm:h-14 sm:w-14 sm:text-lg"
+                      style={{
+                        background: isSelected ? area?.hex : 'white',
+                        borderColor: isSelected ? area?.hex : '#cbd5e1',
+                        color: isSelected ? 'white' : '#334155',
+                        boxShadow: isSelected ? `0 0 0 3px ${area?.hex}30` : undefined,
+                      }}>
+                      {opt.value}
+                    </span>
+                    <span className="text-[11px] font-semibold leading-tight text-slate-700 sm:text-sm">{opt.label}</span>
                   </button>
                 )
               })}

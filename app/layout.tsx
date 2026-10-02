@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
+import { VisitorAnalytics } from '@/components/visitor-analytics'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -64,9 +66,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={inter.variable}>
       <body className="min-h-screen bg-white text-slate-900 antialiased flex flex-col">
+        <VisitorAnalytics />
         <Navigation />
         <main className="flex-1">{children}</main>
         <Footer />
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-SNRPFRYZHF" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-SNRPFRYZHF');`}
+        </Script>
       </body>
     </html>
   )

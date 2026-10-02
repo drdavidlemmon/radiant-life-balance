@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { ArrowRight, ArrowLeft, Star, ExternalLink, Clock, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import { AreaData, QuizResults, Product } from '@/types'
+import { trackEvent } from '@/lib/analytics'
 
 interface Props { area: AreaData }
 
@@ -130,7 +131,7 @@ export function AreaPageClient({ area }: Props) {
             {allProducts.map((product, i) => {
               const tm = TYPE_META[product.type]
               return (
-                <motion.a key={product.id} href={product.affiliateUrl} target="_blank" rel="noopener noreferrer"
+                <motion.a key={product.id} href={product.affiliateUrl} onClick={() => trackEvent('affiliate_click')} target="_blank" rel="noopener noreferrer"
                   initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }} viewport={{ once: true }}
                   className="group block bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md rounded-xl p-5 transition-all duration-200">
                   <div className="flex items-start justify-between mb-3">
