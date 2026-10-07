@@ -168,7 +168,7 @@ export default function PrivacyPage() {
         {/* Bottom CTA */}
         <div className="mt-12 pt-8 border-t border-slate-100 text-center">
           <p className="text-slate-400 text-sm mb-4">
-            © {year} Radiant Life Balance · by Dr. David Lemmon, ND
+            © {year} Radiant Life Balance · by Dr. David Lemmon
           </p>
           <Link
             href="/"

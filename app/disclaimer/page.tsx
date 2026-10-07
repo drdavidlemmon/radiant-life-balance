@@ -42,7 +42,7 @@ export default function DisclaimerPage() {
             medical advice, diagnosis, or treatment.
           </p>
           <p>
-            Dr. David Lemmon, ND, is a licensed naturopathic doctor. The information provided through this
+            Dr. David Lemmon, is a licensed naturopathic doctor. The information provided through this
             website reflects general wellness education and personal opinion and does <strong>not</strong> constitute
             a physician-patient relationship. Viewing, completing the assessment, or reading any content on this
             site does not establish a clinical relationship between you and Dr. Lemmon or Radiant Life Balance.
@@ -168,7 +168,7 @@ export default function DisclaimerPage() {
           <p>
             All content on this website — including text, articles, graphics, logos, quiz questions, and
             the Radiant Life Balance assessment — is the intellectual property of Radiant Life Balance and
-            Dr. David Lemmon, ND, unless otherwise stated. Content is protected under applicable copyright
+            Dr. David Lemmon, unless otherwise stated. Content is protected under applicable copyright
             law.
           </p>
           <p>
@@ -196,7 +196,7 @@ export default function DisclaimerPage() {
         {/* Bottom CTA */}
         <div className="mt-12 pt-8 border-t border-slate-100 text-center">
           <p className="text-slate-400 text-sm mb-4">
-            © {year} Radiant Life Balance · by Dr. David Lemmon, ND
+            © {year} Radiant Life Balance · by Dr. David Lemmon
           </p>
           <Link
             href="/"

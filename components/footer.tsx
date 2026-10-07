@@ -31,7 +31,7 @@ export function Footer() {
           <p className="text-sm text-slate-500 leading-relaxed">
             A doctor-created assessment across 6 life areas — helping you discover where to focus for the greatest impact on your wellbeing.
           </p>
-          <p className="text-xs text-slate-400 mt-4">by Dr. David Lemmon, ND</p>
+          <p className="text-xs text-slate-400 mt-4">by Dr. David Lemmon</p>
         </div>
 
         {/* Life Areas */}

@@ -57,7 +57,7 @@ export default function Image() {
                   Radiant Life Balance
                 </span>
                 <span style={{ fontSize: 13, color: '#94a3b8', marginTop: 3 }}>
-                  by Dr. David Lemmon, ND
+                  by Dr. David Lemmon
                 </span>
               </div>
             </div>

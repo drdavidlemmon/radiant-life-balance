@@ -81,7 +81,7 @@ async function generateShareCard(results: QuizResults): Promise<Blob> {
 
   ctx.fillStyle = '#64748b'
   ctx.font = `26px ${FONT}`
-  ctx.fillText('Life Balance Assessment  ·  Dr. David Lemmon, ND', W / 2, 138)
+  ctx.fillText('Life Balance Assessment', W / 2, 138)
 
   // Thin divider
   ctx.strokeStyle = '#e2e8f0'

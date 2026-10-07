@@ -360,7 +360,7 @@ export default function ResultsPage() {
             </Link>
           </div>
         </motion.div>
-        <p className="text-center text-slate-400 text-xs mt-6">Score each area 0–100 · Repeat every 6 months · by Dr. David Lemmon, ND</p>
+        <p className="text-center text-slate-400 text-xs mt-6">Score each area 0–100 · Repeat every 6 months · by Dr. David Lemmon</p>
       </div>
     </div>
   )

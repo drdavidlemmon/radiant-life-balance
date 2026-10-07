@@ -183,7 +183,7 @@ export default async function Image({ params }: { params: Promise<{ area: string
           paddingLeft: 72, paddingRight: 72, paddingBottom: 20,
         }}>
           <span style={{ fontSize: 15, color: '#94a3b8' }}>radiantlifebalance.com/{area}</span>
-          <span style={{ fontSize: 15, color: '#94a3b8' }}>Dr. David Lemmon, ND</span>
+          <span style={{ fontSize: 15, color: '#94a3b8' }}>Dr. David Lemmon</span>
         </div>
 
         {/* Bottom area color stripe */}

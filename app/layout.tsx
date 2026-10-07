@@ -24,8 +24,8 @@ export const metadata: Metadata = {
     'wellness quiz', 'self improvement', 'life balance score', 'radiant life',
     'mind body spirit', 'personal development quiz',
   ],
-  authors: [{ name: 'Dr. David Lemmon, ND' }],
-  creator: 'Dr. David Lemmon, ND',
+  authors: [{ name: 'Dr. David Lemmon' }],
+  creator: 'Dr. David Lemmon',
   publisher: 'Radiant Life Balance',
   openGraph: {
     type: 'website',
