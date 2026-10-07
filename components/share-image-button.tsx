@@ -302,8 +302,7 @@ export function ShareImageButton({ results, variant = 'default' }: Props) {
     setPreview(null)
   }
 
-  if (variant === 'compact') {
-    return (
+  const trigger = variant === 'compact' ? (
       <button
         onClick={handleGenerate}
         disabled={loading}
@@ -316,11 +315,7 @@ export function ShareImageButton({ results, variant = 'default' }: Props) {
           : <ImageDown className="w-4 h-4" />}
         {loading ? 'Generating…' : 'Create Share Image'}
       </button>
-    )
-  }
-
-  return (
-    <>
+  ) : (
       <button
         onClick={handleGenerate}
         disabled={loading}
@@ -335,6 +330,11 @@ export function ShareImageButton({ results, variant = 'default' }: Props) {
           : <ImageDown className="w-4 h-4" />}
         {loading ? 'Generating image…' : 'Create Shareable Image'}
       </button>
+  )
+
+  return (
+    <>
+      {trigger}
 
       {/* Preview modal */}
       {showPreview && preview && (
