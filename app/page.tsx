@@ -139,7 +139,7 @@ export default function Home() {
             <ShareQuizButton />
           </div>
 
-          <p className="text-xs text-slate-400 mt-4">By Dr. David Lemmon, ND</p>
+          <p className="text-xs text-slate-400 mt-4">By Dr. David Lemmon</p>
         </div>
       </section>
 
@@ -373,7 +373,7 @@ export default function Home() {
       </section>
 
       <footer className="border-t border-slate-100 py-8 px-4 text-center">
-        <p className="text-slate-400 text-xs">© {new Date().getFullYear()} Radiant Life Balance · Dr. David Lemmon, ND</p>
+        <p className="text-slate-400 text-xs">© {new Date().getFullYear()} Radiant Life Balance · Dr. David Lemmon</p>
       </footer>
     </div>
   )

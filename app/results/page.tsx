@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRight, RefreshCw, TrendingUp, ChevronRight, Zap, FileDown } from 'lucide-react'
@@ -11,6 +11,7 @@ import { DownloadPDFButton } from '@/components/download-pdf-button'
 import { ShareResultsPanel } from '@/components/share-results-panel'
 import { ShareImageButton } from '@/components/share-image-button'
 import { NewsletterSignup } from '@/components/newsletter-signup'
+import { PremiumReportOffer } from '@/components/premium-report-offer'
 import { AreaKey, QuizResults } from '@/types'
 
 const AREA_META: Record<AreaKey, { name: string; icon: string; hex: string; light: string; textColor: string }> = {
@@ -187,6 +188,11 @@ export default function ResultsPage() {
           </div>
         </motion.div>
 
+        <Suspense fallback={null}>
+          <PremiumReportOffer results={results} isDemo={isDemo} />
+        </Suspense>
+        <div className="mb-8"><ShareResultsPanel results={results} /></div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
           <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}
             className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
@@ -241,6 +247,12 @@ export default function ResultsPage() {
             })}
           </div>
         </motion.div>
+
+        <div className="mb-8 rounded-2xl border border-green-200 bg-green-50 p-6">
+          <h2 className="text-xl font-bold text-slate-900">Your first step this week</h2>
+          <p className="text-slate-600 mt-2 mb-4">Focus on {AREA_META[top].name}, your top priority. Pick one small action you can repeat for seven days. Your stronger life areas can give you the support and routine to keep going.</p>
+          <Link href="/challenge" className="inline-flex rounded-xl bg-green-700 px-5 py-3 text-white font-semibold">Start the free 30-day challenge</Link>
+        </div>
 
         {/* ── Newsletter Signup ── */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
@@ -304,8 +316,7 @@ export default function ResultsPage() {
             <DownloadPDFButton results={results} deepDiveResults={deepDiveScores} />
           </div>
 
-          {/* Share results card */}
-          <ShareResultsPanel results={results} />
+          <div className="rounded-2xl border border-purple-100 p-6 flex items-center"><p className="text-slate-600 text-sm">Invite someone you care about to take the quiz, then compare what each of you wants to work on.</p></div>
         </motion.div>
 
         {/* ── Shareable Image Card ── */}
@@ -349,7 +360,7 @@ export default function ResultsPage() {
             </Link>
           </div>
         </motion.div>
-        <p className="text-center text-slate-400 text-xs mt-6">Score each area 0–100 · Repeat every 6 months · by Dr. David Lemmon, ND</p>
+        <p className="text-center text-slate-400 text-xs mt-6">Score each area 0–100 · Repeat every 6 months · by Dr. David Lemmon</p>
       </div>
     </div>
   )

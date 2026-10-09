@@ -3,25 +3,26 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
+import Image from 'next/image'
 import { deepDiveQuestions } from '@/lib/deep-dive-data'
 import { areasData } from '@/lib/areas-data'
 import type { AreaKey } from '@/types'
 
 const OPTS = [
-  { value: 1, label: 'False',        sub: 'This does not describe me at all' },
-  { value: 2, label: 'Mostly False', sub: 'This rarely describes me' },
-  { value: 3, label: 'Neutral',      sub: 'This sometimes describes me' },
-  { value: 4, label: 'Mostly True',  sub: 'This often describes me' },
-  { value: 5, label: 'True',         sub: 'This consistently describes me' },
+  { value: 1, label: 'False' },
+  { value: 2, label: 'Mostly false' },
+  { value: 3, label: 'Neutral' },
+  { value: 4, label: 'Mostly true' },
+  { value: 5, label: 'True' },
 ]
 
 const AREA_META: Record<AreaKey, { hex: string; light: string; icon: string }> = {
-  body:          { hex: '#ef4444', light: '#fef2f2', icon: '❤️' },
-  mind:          { hex: '#8b5cf6', light: '#f5f3ff', icon: '🧠' },
-  spirit:        { hex: '#f59e0b', light: '#fffbeb', icon: '✨' },
-  relationships: { hex: '#ec4899', light: '#fdf2f8', icon: '💞' },
-  money:         { hex: '#10b981', light: '#ecfdf5', icon: '💰' },
-  direction:     { hex: '#3b82f6', light: '#eff6ff', icon: '🧭' },
+  mind:          { hex: '#f97316', light: '#fff7ed', icon: '/icon-mind.png' },
+  body:          { hex: '#ef4444', light: '#fef2f2', icon: '/icon-body.png' },
+  spirit:        { hex: '#eab308', light: '#fefce8', icon: '/icon-spirit.png' },
+  relationships: { hex: '#3b82f6', light: '#eff6ff', icon: '/icon-relationships.png' },
+  money:         { hex: '#22c55e', light: '#f0fdf4', icon: '/icon-money.png' },
+  direction:     { hex: '#a855f7', light: '#faf5ff', icon: '/icon-direction.png' },
 }
 
 export default function DeepDivePage() {
@@ -77,6 +78,7 @@ export default function DeepDivePage() {
         localStorage.setItem(`deepDiveResults_${areaKey}`, JSON.stringify({
           area: areaKey,
           subcategoryScores: result,
+          answers: updated,
           completedAt: new Date().toISOString(),
         }))
         router.push(`/${areaKey}/deep-dive/results`)
@@ -99,7 +101,7 @@ export default function DeepDivePage() {
             ← Back
           </button>
           <div className="flex items-center gap-2">
-            <span className="text-base">{meta.icon}</span>
+            <Image src={meta.icon} alt="" width={32} height={32} className="h-8 w-8 rounded-full object-contain" />
             <span className="font-semibold text-gray-800 capitalize">{areaName} Deep Dive</span>
           </div>
           <span className="text-sm text-gray-500 font-mono">{current + 1} / {total}</span>
@@ -142,47 +144,28 @@ export default function DeepDivePage() {
               exit={{ opacity: 0, x: direction === 'forward' ? -40 : 40 }}
               transition={{ duration: 0.22, ease: 'easeInOut' }}
             >
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-snug mb-10">
+              <h2 id="deep-dive-question" className="text-2xl sm:text-3xl font-bold text-gray-900 leading-snug mb-8">
                 {q.question}
               </h2>
 
-              <div className="flex flex-col gap-3">
+              <div role="group" aria-labelledby="deep-dive-question" className="grid grid-cols-5 gap-1.5 sm:gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-2 sm:p-5">
                 {OPTS.map(opt => {
                   const isSelected = chosen === opt.value
                   return (
-                    <motion.button
-                      key={opt.value}
-                      onClick={() => handleSelect(opt.value)}
-                      disabled={chosen !== null}
-                      whileHover={{ scale: chosen === null ? 1.015 : 1 }}
-                      whileTap={{ scale: 0.985 }}
-                      className={[
-                        'w-full text-left px-5 py-4 rounded-xl border-2 transition-all duration-150',
-                        isSelected
-                          ? 'text-white shadow-lg scale-[1.015]'
-                          : 'bg-white border-gray-200 hover:border-gray-300 text-gray-800',
-                        chosen !== null && !isSelected ? 'opacity-40' : '',
-                        'disabled:cursor-default',
-                      ].join(' ')}
-                      style={isSelected ? { background: meta.hex, borderColor: meta.hex } : {}}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-semibold text-base">{opt.label}</div>
-                          <div className={`text-sm mt-0.5 ${isSelected ? 'text-white/80' : 'text-gray-500'}`}>
-                            {opt.sub}
-                          </div>
-                        </div>
-                        {isSelected && (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="text-white text-xl ml-4 flex-shrink-0"
-                          >
-                            ✓
-                          </motion.div>
-                        )}
-                      </div>
+                    <motion.button key={opt.value} type="button" onClick={() => handleSelect(opt.value)}
+                      disabled={chosen !== null} aria-label={`${opt.value}: ${opt.label}`} aria-pressed={isSelected}
+                      className="flex min-w-0 flex-col items-center gap-2 rounded-xl px-0.5 py-2 text-center transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-default"
+                      style={{ outlineColor: meta.hex }}>
+                      <span className="flex h-11 w-11 items-center justify-center rounded-full border-2 text-base font-bold tabular-nums transition-all sm:h-14 sm:w-14 sm:text-lg"
+                        style={{
+                          background: isSelected ? meta.hex : 'white',
+                          borderColor: isSelected ? meta.hex : '#cbd5e1',
+                          color: isSelected ? 'white' : '#334155',
+                          boxShadow: isSelected ? `0 0 0 3px ${meta.hex}30` : undefined,
+                        }}>
+                        {opt.value}
+                      </span>
+                      <span className="text-[11px] font-semibold leading-tight text-slate-700 sm:text-sm">{opt.label}</span>
                     </motion.button>
                   )
                 })}

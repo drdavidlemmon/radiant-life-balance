@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'About | Radiant Life Balance',
-  description: 'Meet Dr. David Lemmon, ND, and learn the story behind the Radiant Life Balance assessment.',
+  description: 'Meet Dr. David Lemmon, and learn the story behind the Radiant Life Balance assessment.',
 }
 
 export default function AboutPage() {
@@ -47,7 +47,7 @@ export default function AboutPage() {
 
         <section className="mb-10">
           <h2 className="text-xl font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">
-            Meet Dr. David Lemmon, ND
+            Meet Dr. David Lemmon
           </h2>
           <div className="space-y-4 text-slate-600 text-sm leading-relaxed">
             <p>
@@ -117,7 +117,7 @@ export default function AboutPage() {
             Take the 30-Question Assessment
           </Link>
           <p className="text-slate-400 text-sm mt-6">
-            © {year} Radiant Life Balance · by Dr. David Lemmon, ND
+            © {year} Radiant Life Balance · by Dr. David Lemmon
           </p>
         </div>
 

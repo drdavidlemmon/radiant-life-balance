@@ -51,9 +51,10 @@ export default function PrivacyPage() {
           <p>We may collect several types of information from and about users of our Website:</p>
           <ul className="list-disc pl-5 space-y-2">
             <li>
-              <strong>Quiz responses:</strong> Your answers to the Radiant Life Balance assessment are processed
-              in your browser to calculate your results. We do not transmit or store your individual quiz
-              answers on our servers.
+              <strong>Quiz and report responses:</strong> Your answers to the Radiant Life Balance assessment and
+              deep dives are processed in your browser to calculate your results. If you order a personalized
+              report, your quiz and deep dive answers, scores, and responses to eight intake questions are sent
+              to our report storage and AI provider to generate it. We keep them for up to 30 days.
             </li>
             <li>
               <strong>Email address:</strong> If you voluntarily subscribe to our newsletter, opt in for updates,
@@ -92,7 +93,7 @@ export default function PrivacyPage() {
             We may use cookies, web beacons, and similar tracking technologies to collect information about
             your browsing activities. Cookies are small data files stored on your device. We use cookies to
             understand how visitors use our Website, remember your preferences, and support analytics and
-            affiliate link tracking.
+            affiliate link tracking. We use Google Analytics to measure visits and how visitors use the Website.
           </p>
           <p>
             You can set your browser to refuse all or some browser cookies, or to alert you when cookies are
@@ -114,7 +115,9 @@ export default function PrivacyPage() {
         <Section title="Third-Party Service Providers">
           <p>
             We may use third-party services to help us operate our Website and communicate with subscribers,
-            including web hosting providers, analytics services, and email delivery platforms. These providers
+            including web hosting providers, analytics services, Stripe for payments, an AI report provider,
+            temporary report storage, and email delivery platforms. Quiz, deep dive, and intake answers used for a purchased report
+            are stored for up to 30 days. These providers
             have access to personal information only to the extent necessary to perform their functions and
             are contractually obligated to protect it.
           </p>
@@ -165,7 +168,7 @@ export default function PrivacyPage() {
         {/* Bottom CTA */}
         <div className="mt-12 pt-8 border-t border-slate-100 text-center">
           <p className="text-slate-400 text-sm mb-4">
-            © {year} Radiant Life Balance · by Dr. David Lemmon, ND
+            © {year} Radiant Life Balance · by Dr. David Lemmon
           </p>
           <Link
             href="/"

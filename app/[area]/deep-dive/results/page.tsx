@@ -3,17 +3,18 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { areasData } from '@/lib/areas-data'
 import type { AreaKey } from '@/types'
 import Link from 'next/link'
 
 const AREA_META: Record<AreaKey, { hex: string; light: string; icon: string; name: string }> = {
-  body:          { hex: '#ef4444', light: '#fef2f2', icon: '❤️',  name: 'Body' },
-  mind:          { hex: '#8b5cf6', light: '#f5f3ff', icon: '🧠',  name: 'Mind' },
-  spirit:        { hex: '#f59e0b', light: '#fffbeb', icon: '✨',  name: 'Spirit' },
-  relationships: { hex: '#ec4899', light: '#fdf2f8', icon: '💞',  name: 'Relationships' },
-  money:         { hex: '#10b981', light: '#ecfdf5', icon: '💰',  name: 'Money' },
-  direction:     { hex: '#3b82f6', light: '#eff6ff', icon: '🧭',  name: 'Direction' },
+  mind:          { hex: '#f97316', light: '#fff7ed', icon: '/icon-mind.png', name: 'Mind' },
+  body:          { hex: '#ef4444', light: '#fef2f2', icon: '/icon-body.png', name: 'Body' },
+  spirit:        { hex: '#eab308', light: '#fefce8', icon: '/icon-spirit.png', name: 'Spirit' },
+  relationships: { hex: '#3b82f6', light: '#eff6ff', icon: '/icon-relationships.png', name: 'Relationships' },
+  money:         { hex: '#22c55e', light: '#f0fdf4', icon: '/icon-money.png', name: 'Money' },
+  direction:     { hex: '#a855f7', light: '#faf5ff', icon: '/icon-direction.png', name: 'Direction' },
 }
 
 interface SubcatResult {
@@ -93,7 +94,7 @@ export default function DeepDiveResultsPage() {
             ← Retake
           </button>
           <div className="flex items-center gap-2">
-            <span className="text-base">{meta.icon}</span>
+            <Image src={meta.icon} alt="" width={32} height={32} className="h-8 w-8 rounded-full object-contain" />
             <span className="font-semibold text-gray-800">{meta.name} Deep Dive Results</span>
           </div>
           <Link href="/results" className="text-sm font-medium" style={{ color: meta.hex }}>
@@ -110,7 +111,7 @@ export default function DeepDiveResultsPage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <div className="text-5xl mb-4">{meta.icon}</div>
+          <div className="mb-4 flex justify-center"><Image src={meta.icon} alt={meta.name} width={96} height={96} className="h-24 w-24 rounded-full object-contain" /></div>
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">
             Your {meta.name} Priorities
           </h1>

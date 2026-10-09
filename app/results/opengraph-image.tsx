@@ -66,7 +66,7 @@ export default function Image() {
         {/* Footer */}
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingLeft: 56, paddingRight: 56, paddingBottom: 8, paddingTop: 4 }}>
           <span style={{ fontSize: 13, color: '#cbd5e1' }}>radiantlifebalance.com</span>
-          <span style={{ fontSize: 13, color: '#cbd5e1' }}>Dr. David Lemmon, ND</span>
+          <span style={{ fontSize: 13, color: '#cbd5e1' }}>Dr. David Lemmon</span>
         </div>
 
         {/* Bottom stripe */}

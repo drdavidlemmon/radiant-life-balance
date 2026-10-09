@@ -36,7 +36,7 @@ export default function TermsPage() {
         <Section title="Agreement to Terms">
           <p>
             These Terms of Service (&ldquo;Terms&rdquo;) govern your access to and use of radiantlifebalance.com
-            (the &ldquo;Website&rdquo;), operated by Dr. David Lemmon, ND (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or
+            (the &ldquo;Website&rdquo;), operated by Dr. David Lemmon (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or
             &ldquo;our&rdquo;). By accessing or using the Website, you agree to be bound by these Terms. If you do
             not agree to these Terms, please do not use the Website.
           </p>
@@ -73,7 +73,7 @@ export default function TermsPage() {
           <p>
             The Website and its entire contents, features, and functionality — including but not limited to
             all text, graphics, logos, quiz questions, assessment methodology, and the compilation thereof —
-            are owned by Dr. David Lemmon, ND, and are protected by United States and international copyright,
+            are owned by Dr. David Lemmon, and are protected by United States and international copyright,
             trademark, and other intellectual property laws.
           </p>
           <p>
@@ -92,6 +92,10 @@ export default function TermsPage() {
             <Link href="/disclaimer" className="text-blue-600 hover:underline">Disclaimer</Link>
             {' '}for our full affiliate disclosure.
           </p>
+        </Section>
+
+        <Section title="Personalized reports">
+          <p>Optional AI-generated reports cost $6.99. Payment is processed through Stripe. After payment, you can download your report as a PDF for up to 30 days using your checkout return link. The report is educational self-reflection and is not medical, mental health, legal, or financial advice. If you paid but cannot access your report, contact us so we can help.</p>
         </Section>
 
         <Section title="User-Provided Information">
@@ -117,7 +121,7 @@ export default function TermsPage() {
 
         <Section title="Limitation of Liability">
           <p>
-            To the fullest extent permitted by applicable law, in no event will Dr. David Lemmon, ND, or
+            To the fullest extent permitted by applicable law, in no event will Dr. David Lemmon, or
             Radiant Life Balance be liable for any indirect, incidental, special, consequential, or punitive
             damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss
             of data, use, goodwill, or other intangible losses, resulting from your access to or use of, or
@@ -127,7 +131,7 @@ export default function TermsPage() {
 
         <Section title="Indemnification">
           <p>
-            You agree to defend, indemnify, and hold harmless Dr. David Lemmon, ND, and Radiant Life Balance
+            You agree to defend, indemnify, and hold harmless Dr. David Lemmon, and Radiant Life Balance
             from and against any claims, liabilities, damages, judgments, awards, losses, costs, expenses, or
             fees arising out of or relating to your violation of these Terms or your use of the Website.
           </p>
@@ -161,7 +165,7 @@ export default function TermsPage() {
         {/* Bottom CTA */}
         <div className="mt-12 pt-8 border-t border-slate-100 text-center">
           <p className="text-slate-400 text-sm mb-4">
-            © {year} Radiant Life Balance · by Dr. David Lemmon, ND
+            © {year} Radiant Life Balance · by Dr. David Lemmon
           </p>
           <Link
             href="/"

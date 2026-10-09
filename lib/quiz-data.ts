@@ -1,7 +1,7 @@
 import { QuizQuestion } from '@/types'
 
 // Scoring: False=1 | Mostly False=2 | Neutral=3 | Mostly True=4 | True=5
-// Original questionnaire by Dr. David Lemmon, ND — ReviveFamilyHealingCenter.com
+// Original questionnaire by Dr. David Lemmon — ReviveFamilyHealingCenter.com
 // Each area: 5 questions × 5 max = 25 points → converted to 0–100%
 
 const OPTS = [
