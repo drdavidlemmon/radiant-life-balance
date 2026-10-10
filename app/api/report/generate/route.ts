@@ -6,7 +6,7 @@ import { intakeFields, isDeepDiveInput, isReportIntake, type ReportOrderInput } 
 import { reportStripeKey } from '@/lib/stripe-key'
 
 export const runtime = 'nodejs'
-export const maxDuration = 60
+export const maxDuration = 300
 
 export async function POST(req: NextRequest) {
   const stripeKey = reportStripeKey()
@@ -19,6 +19,8 @@ export async function POST(req: NextRequest) {
   } catch { return NextResponse.json({ error: 'Invalid request.' }, { status: 400 }) }
   if (!/^cs_(test|live)_[a-zA-Z0-9]{10,}$/.test(sessionId)) return NextResponse.json({ error: 'Invalid checkout session.' }, { status: 400 })
 
+  let stage = 'payment verification'
+  const startedAt = Date.now()
   try {
     const stripe = await fetch(`https://api.stripe.com/v1/checkout/sessions/${sessionId}`, {
       headers: { Authorization: `Bearer ${stripeKey}` }, cache: 'no-store',
@@ -36,6 +38,7 @@ export async function POST(req: NextRequest) {
     }
     const token = session.metadata?.report_token
     if (!token || !/^[0-9a-f-]{36}$/.test(token)) return NextResponse.json({ error: 'Report order not found.' }, { status: 404 })
+    stage = 'reading saved report (Upstash)'
     const saved = await redisCommand<string | null>('GET', `report:input:${token}`)
     if (!saved) return NextResponse.json({ error: 'This report has expired. Please contact support.' }, { status: 410 })
     const input = JSON.parse(saved) as ReportOrderInput
@@ -46,6 +49,7 @@ export async function POST(req: NextRequest) {
     const evidence = evidenceForOrder(input)
     // Version the cache so previously paid orders can receive the improved analysis.
     const outputKey = `report:output:v3:${token}`
+    stage = 'reading report cache (Upstash)'
     const cached = await redisCommand<string | null>('GET', outputKey)
     if (cached) {
       const report: unknown = JSON.parse(cached)
@@ -54,7 +58,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const lock = await redisCommand<string | null>('SET', `report:generating:${token}`, '1', 'NX', 'EX', 120)
+    stage = 'acquiring report lock (Upstash)'
+    const lock = await redisCommand<string | null>('SET', `report:generating:${token}`, '1', 'NX', 'EX', 360)
     if (lock !== 'OK') return NextResponse.json({ error: 'Your report is already being prepared. Please try again shortly.' }, { status: 429 })
     try {
     const intake = intakeFields.map(field => ({ question: field.label, answer: input.intake[field.key] }))
@@ -76,15 +81,22 @@ Before returning JSON, check all narratives against the exact supplied statement
 Output strictly JSON: overview, strengths, priorityStrategy, connections, nextThirtyDays, areaPlans (SIX objects, each with area, insight, strengthBridge, firstStep, monthPlan; ONLY the number-one priority area also includes recommendation {resourceId, why, howToUse}). Omit recommendation from the other five areaPlans. Each area exactly once.
 Aim for overview 100-120 words; strengths, priorityStrategy and connections 60-90 words; nextThirtyDays 120-170 words across its four weekly checklist entries; each insight 70-100 words, strengthBridge 40-60, firstStep 25-40, monthPlan 45-65, recommendation why and howToUse 20-35 each. Use complete sentences and short paragraphs. Finish every paragraph naturally; never stop to meet a word count.
 Existing affiliate catalog: ${JSON.stringify(catalog)}.`
+    stage = 'AI report request'
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: { Authorization: `Bearer ${aiKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ model: process.env.OPENAI_REPORT_MODEL || 'gpt-5.4-mini', response_format: { type: 'json_object' }, messages: [
         { role: 'system', content: 'You write careful educational wellness reports. Return only valid JSON. Respect the supplied scores. Do not offer medical, financial, or mental health diagnosis or personalized treatment.' },
         { role: 'user', content: prompt },
-      ] }), cache: 'no-store',
+      ] }), cache: 'no-store', signal: AbortSignal.timeout(240000),
     })
-    if (!response.ok) return NextResponse.json({ error: 'Your payment is complete. The report is temporarily unavailable; please retry this link.' }, { status: 502 })
+    if (!response.ok) {
+      console.error('Report generation: AI request rejected', {
+        status: response.status, requestId: response.headers.get('x-request-id'),
+      })
+      return NextResponse.json({ error: 'Your payment is complete. The report is temporarily unavailable; please retry this link.' }, { status: 502 })
+    }
+    stage = 'validating AI report'
     const data = await response.json() as { choices?: { finish_reason?: string; message?: { content?: string } }[] }
     if (data.choices?.[0]?.finish_reason !== 'stop') throw new Error('Incomplete AI response')
     const parsed: unknown = JSON.parse(data.choices?.[0]?.message?.content || '')
@@ -97,13 +109,19 @@ Existing affiliate catalog: ${JSON.stringify(catalog)}.`
         return area === priorityArea ? { ...narrative, recommendation } : narrative
       }),
     }
+    stage = 'saving generated report (Upstash)'
     await redisCommand('SET', outputKey, JSON.stringify(report), 'EX', 60 * 60 * 24 * 30)
     return NextResponse.json({ results, report, resources: resourcesForReport(report, results), evidence })
     } finally {
       await redisCommand('DEL', `report:generating:${token}`).catch(() => {})
     }
-  } catch {
-    return NextResponse.json({ error: 'Your payment is complete. We could not generate the report yet. Please retry the link.' }, { status: 502 })
+  } catch (error) {
+    const errorType = error instanceof Error ? error.name : 'Unknown'
+    console.error('Report generation failed', { stage, errorType, durationMs: Date.now() - startedAt })
+    const timedOut = errorType === 'TimeoutError' || errorType === 'AbortError'
+    return NextResponse.json({ error: timedOut
+      ? 'Your payment is complete. Report preparation took too long. Please retry this same link; you do not need to pay again.'
+      : 'Your payment is complete. We could not generate the report yet. Please retry the link.' }, { status: timedOut ? 504 : 502 })
   }
 }
 

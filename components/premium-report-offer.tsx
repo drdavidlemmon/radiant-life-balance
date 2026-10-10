@@ -49,7 +49,24 @@ export function PremiumReportOffer({ results, isDemo }: { results: QuizResults; 
     let cancelled = false
     setBusy(true)
     fetch('/api/report/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sessionId }) })
-      .then(async res => { const value = await res.json(); if (!res.ok) throw new Error(value.error || 'Report unavailable'); return value as Payload })
+      .then(async res => {
+        const text = await res.text()
+        let value: unknown
+        try { value = JSON.parse(text) } catch {
+          throw new Error(res.status === 504
+            ? 'Report preparation timed out. Please retry this same link; you do not need to pay again.'
+            : `The report service returned an unexpected response${res.status >= 400 ? ` (HTTP ${res.status})` : ''}. Please retry this same link; you do not need to pay again.`)
+        }
+        if (!res.ok) {
+          const message = value && typeof value === 'object' && 'error' in value && typeof value.error === 'string'
+            ? value.error : 'Report unavailable. Please retry this same link.'
+          throw new Error(message)
+        }
+        if (!value || typeof value !== 'object' || !('report' in value) || !('results' in value) || !('resources' in value)) {
+          throw new Error('The report service returned an incomplete response. Please retry this same link; you do not need to pay again.')
+        }
+        return value as Payload
+      })
       .then(value => { if (!cancelled) { setReport(value); setStatus('Your report is ready to download.') } })
       .catch(error => { if (!cancelled) setStatus(error instanceof Error ? error.message : 'Report unavailable') })
       .finally(() => { if (!cancelled) setBusy(false) })
