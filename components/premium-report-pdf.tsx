@@ -46,7 +46,7 @@ function Frame({ title, area, children }: { title: string; area?: AreaKey; child
     <View style={s.rainbow}>{['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#a855f7'].map(color => <View key={color} style={[s.stripe, { backgroundColor: color }]} />)}</View>
     <View style={s.sectionHeading} wrap={false}>{area && <Image src={asset(`/icon-${area}.png`)} style={s.icon} />}<Text style={[s.title, { color: area ? inks[area] : '#5b21b6' }]}>{title}</Text></View>
     {children}
-    <Text style={s.footer} fixed render={({ pageNumber, totalPages }) => `Educational self-reflection only. Not medical, mental health, or financial advice.  |  ${pageNumber} / ${totalPages}`} />
+    <Text style={s.footer} fixed render={({ pageNumber, totalPages }) => `The report is a deep AI analysis for education and reflection. Not medical, mental health, or financial advice.  |  ${pageNumber} / ${totalPages}`} />
   </Page>
 }
 function Paragraphs({ value }: { value: string }) {
