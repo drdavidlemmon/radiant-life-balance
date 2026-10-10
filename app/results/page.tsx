@@ -12,6 +12,7 @@ import { ShareResultsPanel } from '@/components/share-results-panel'
 import { ShareImageButton } from '@/components/share-image-button'
 import { NewsletterSignup } from '@/components/newsletter-signup'
 import { PremiumReportOffer } from '@/components/premium-report-offer'
+import { QuizResourceRecommendation } from '@/components/quiz-resource-recommendation'
 import { AreaKey, QuizResults } from '@/types'
 
 const AREA_META: Record<AreaKey, { name: string; icon: string; hex: string; light: string; textColor: string }> = {
@@ -187,6 +188,8 @@ export default function ResultsPage() {
             </div>
           </div>
         </motion.div>
+
+        <QuizResourceRecommendation results={results} isDemo={isDemo} />
 
         <Suspense fallback={null}>
           <PremiumReportOffer results={results} isDemo={isDemo} />
