@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/terms' },
   title: 'Terms of Service | Radiant Life Balance',
   description: 'The terms and conditions governing your use of Radiant Life Balance.',
 }

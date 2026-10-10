@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { redisCommand, redisReady } from '@/lib/redis'
-import type { SiteEvent } from '@/lib/analytics'
+import { CLIENT_EVENTS, type SiteEvent } from '@/lib/analytics'
 
-const EVENTS: SiteEvent[] = ['visitor', 'quiz_start', 'quiz_complete', 'share', 'affiliate_click']
+const EVENTS: readonly SiteEvent[] = CLIENT_EVENTS
 export const runtime = 'nodejs'
 
 export async function POST(req: NextRequest) {

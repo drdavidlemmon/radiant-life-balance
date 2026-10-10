@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/privacy' },
   title: 'Privacy Policy | Radiant Life Balance',
   description: 'How Radiant Life Balance collects, uses, and protects your information.',
 }

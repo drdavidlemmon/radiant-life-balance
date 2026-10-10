@@ -29,7 +29,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid request body.' }, { status: 400 })
   }
 
-  const email = (body.email || '').trim().toLowerCase()
+  if (!body || typeof body !== 'object') return NextResponse.json({error: 'Invalid request body.'}, {status: 400})
+
+  const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : ''
   const areas = Array.isArray(body.areas) ? body.areas.filter((a): a is string => typeof a === 'string' && a in TAG_IDS) : []
 
   if (!email || !isValidEmail(email)) {
@@ -48,41 +50,45 @@ export async function POST(req: NextRequest) {
         email_address: email,
         state: 'active',
       }),
+      signal: AbortSignal.timeout(10000),
     })
 
     if (!subscriberRes.ok) {
-      const errText = await subscriberRes.text()
-      console.error('Kit subscriber creation failed:', subscriberRes.status, errText)
+      console.error('Kit subscriber creation failed:', {status: subscriberRes.status})
       return NextResponse.json({ error: 'Could not process your subscription. Please try again.' }, { status: 502 })
     }
 
     const subscriberData = await subscriberRes.json()
     const subscriberId = subscriberData?.subscriber?.id
 
-    // Step 2: Apply the selected interest tags (if any and we have a subscriber id)
-    if (subscriberId && areas.length > 0) {
-      await Promise.all(
-        areas.map(async (area) => {
-          const tagId = TAG_IDS[area]
-          if (!tagId) return
-          try {
-            await fetch(`${KIT_API_BASE}/tags/${tagId}/subscribers/${subscriberId}`, {
-              method: 'POST',
-              headers: {
-                'X-Kit-Api-Key': KIT_API_KEY,
-                'Content-Type': 'application/json',
-              },
-            })
-          } catch (tagErr) {
-            console.error(`Failed to apply tag ${area}:`, tagErr)
-          }
-        })
-      )
+    if (!Number.isSafeInteger(subscriberId) || subscriberId <= 0) throw new Error('Missing subscriber id')
+    // A failed tag must not be silently reported as successful personalization.
+    const tagResponses = await Promise.all([...new Set(areas)].map(area => fetch(`${KIT_API_BASE}/tags/${TAG_IDS[area]}/subscribers/${subscriberId}`, {
+      method: 'POST', headers: {'X-Kit-Api-Key': KIT_API_KEY, 'Content-Type': 'application/json'},
+      body: '{}', signal: AbortSignal.timeout(10000),
+    })))
+    if (tagResponses.some(response => !response.ok)) {
+      console.error('Kit interest tagging failed', {statuses: tagResponses.map(response => response.status)})
+      return NextResponse.json({error: 'Your email was saved, but we could not save all your interests. Please try again.'}, {status: 502})
     }
-
-    return NextResponse.json({ success: true })
+    // Enable only after a sequence is published and reviewed in the Kit account.
+    const sequenceId = process.env.KIT_WELCOME_SEQUENCE_ID
+    let sequenceEnrolled = false
+    if (sequenceId) {
+      if (!/^[0-9]+$/.test(sequenceId)) throw new Error('Invalid sequence configuration')
+      const response = await fetch(`${KIT_API_BASE}/sequences/${sequenceId}/subscribers/${subscriberId}`, {
+        method: 'POST', headers: {'X-Kit-Api-Key': KIT_API_KEY, 'Content-Type': 'application/json'},
+        body: '{}', signal: AbortSignal.timeout(10000),
+      })
+      if (!response.ok) {
+        console.error('Kit sequence enrollment failed', {status: response.status})
+        return NextResponse.json({error: 'Your email and interests were saved, but we could not start the welcome emails. Please try again.'}, {status: 502})
+      }
+      sequenceEnrolled = true
+    }
+    return NextResponse.json({success: true, sequenceEnrolled})
   } catch (err) {
-    console.error('Subscribe route error:', err)
+    console.error('Subscribe route error:', {errorType: err instanceof Error ? err.name : 'Unknown'})
     return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 })
   }
 }

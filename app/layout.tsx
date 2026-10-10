@@ -82,7 +82,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {`window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-SNRPFRYZHF');`}
+            var safeLocation = window.location.origin + window.location.pathname;
+            var safeReferrer = '';
+            try { var referrerUrl = new URL(document.referrer); safeReferrer = referrerUrl.origin + referrerUrl.pathname; } catch(e) {}
+            gtag('config', 'G-SNRPFRYZHF', {send_page_view: false, page_location: safeLocation, page_referrer: safeReferrer});
+            window.radiantAnalyticsPath = window.location.pathname;
+            if (window.location.pathname !== '/metrics') {
+              gtag('event', 'page_view', {page_location: safeLocation, page_referrer: safeReferrer});
+            }`}
         </Script>
       </body>
     </html>

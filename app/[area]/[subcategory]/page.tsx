@@ -6,6 +6,16 @@ interface Props {
   params: Promise<{ area: string; subcategory: string }>
 }
 
+export async function generateMetadata({params}: Props) {
+  const {area: key, subcategory} = await params
+  const area = areasData[key]
+  const sub = area?.subcategories.find(s => s.id === subcategory)
+  if (!sub) return {}
+  return {title: `${sub.name} | ${area.name}`, description: sub.description,
+    alternates: {canonical: `/${key}/${subcategory}`},
+    openGraph: {title: sub.name, description: sub.description, url: `/${key}/${subcategory}`}}
+}
+
 export default async function SubcategoryPage({ params }: Props) {
   const { area: areaKey, subcategory: subcategoryId } = await params
 

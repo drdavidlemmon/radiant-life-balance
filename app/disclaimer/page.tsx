@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/disclaimer' },
   title: 'Disclaimer | Radiant Life Balance',
   description: 'Medical disclaimer, affiliate disclosure, and terms of use for the Radiant Life Balance assessment.',
 }

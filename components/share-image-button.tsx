@@ -2,287 +2,78 @@
 
 import { useState } from 'react'
 import { ImageDown, Loader2 } from 'lucide-react'
-import { QuizResults, AreaKey } from '@/types'
+import { QuizResults } from '@/types'
+import { AREA_NAMES, shareSummary } from '@/lib/share-summary'
+import { trackEvent } from '@/lib/analytics'
 
-const AREA_META: Record<AreaKey, { name: string; hex: string }> = {
-  mind:          { name: 'Mind',          hex: '#f97316' },
-  body:          { name: 'Body',          hex: '#ef4444' },
-  spirit:        { name: 'Spirit',        hex: '#eab308' },
-  relationships: { name: 'Relationships', hex: '#3b82f6' },
-  money:         { name: 'Money',         hex: '#22c55e' },
-  direction:     { name: 'Direction',     hex: '#a855f7' },
-}
-
-const ORDER: AreaKey[] = ['mind', 'body', 'spirit', 'relationships', 'money', 'direction']
-
-function scoreLabel(s: number) {
-  if (s >= 80) return 'Thriving'
-  if (s >= 60) return 'Good'
-  if (s >= 40) return 'Developing'
-  if (s >= 20) return 'Needs Work'
-  return 'Critical'
-}
-
-// Draw a rounded rectangle path
-function rrect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
-  const safe = Math.min(r, w / 2, h / 2)
-  ctx.beginPath()
-  ctx.moveTo(x + safe, y)
-  ctx.lineTo(x + w - safe, y)
-  ctx.arcTo(x + w, y, x + w, y + safe, safe)
-  ctx.lineTo(x + w, y + h - safe)
-  ctx.arcTo(x + w, y + h, x + w - safe, y + h, safe)
-  ctx.lineTo(x + safe, y + h)
-  ctx.arcTo(x, y + h, x, y + h - safe, safe)
-  ctx.lineTo(x, y + safe)
-  ctx.arcTo(x, y, x + safe, y, safe)
-  ctx.closePath()
-}
-
-async function generateShareCard(results: QuizResults): Promise<Blob> {
-  const W = 1080, H = 1080
-  const canvas = document.createElement('canvas')
-  canvas.width = W
-  canvas.height = H
-  const ctx = canvas.getContext('2d')!
-
-  const PAD = 70
-  const FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'
-
-  // ── Background: white + very subtle purple tint in corner
-  ctx.fillStyle = '#ffffff'
-  ctx.fillRect(0, 0, W, H)
-
-  const bgGrad = ctx.createRadialGradient(W * 0.9, 0, 0, W * 0.9, 0, W * 0.7)
-  bgGrad.addColorStop(0, 'rgba(168,85,247,0.06)')
-  bgGrad.addColorStop(1, 'rgba(255,255,255,0)')
-  ctx.fillStyle = bgGrad
-  ctx.fillRect(0, 0, W, H)
-
-  const bgGrad2 = ctx.createRadialGradient(0, H, 0, 0, H, W * 0.6)
-  bgGrad2.addColorStop(0, 'rgba(34,197,94,0.05)')
-  bgGrad2.addColorStop(1, 'rgba(255,255,255,0)')
-  ctx.fillStyle = bgGrad2
-  ctx.fillRect(0, 0, W, H)
-
-  // ── Top gradient stripe
-  const stripe = ctx.createLinearGradient(0, 0, W, 0)
-  stripe.addColorStop(0,   '#a855f7')
-  stripe.addColorStop(0.5, '#3b82f6')
-  stripe.addColorStop(1,   '#22c55e')
-  ctx.fillStyle = stripe
-  ctx.fillRect(0, 0, W, 16)
-
-  // ── Brand header
-  ctx.textAlign = 'center'
-  ctx.fillStyle = '#1e293b'
-  ctx.font = `bold 58px ${FONT}`
-  ctx.fillText('RADIANT LIFE BALANCE', W / 2, 95)
-
-  ctx.fillStyle = '#64748b'
-  ctx.font = `26px ${FONT}`
-  ctx.fillText('Life Balance Assessment', W / 2, 138)
-
-  // Thin divider
-  ctx.strokeStyle = '#e2e8f0'
-  ctx.lineWidth = 1.5
-  ctx.beginPath()
-  ctx.moveTo(PAD, 162)
-  ctx.lineTo(W - PAD, 162)
-  ctx.stroke()
-
-  // ── Overall score — large centered display
-  const overall = Math.round(
-    Object.values(results.scores).reduce((a, b) => a + b, 0) / Object.values(results.scores).length
-  )
-  const SCY = 268  // score circle center Y
-  const SR  = 88   // radius
-
-  // Track arc background
-  ctx.beginPath()
-  ctx.arc(W / 2, SCY, SR, 0, 2 * Math.PI)
-  ctx.strokeStyle = '#f1f5f9'
-  ctx.lineWidth = 14
-  ctx.stroke()
-
-  // Score arc (gradient)
-  const arcLen = (overall / 100) * 2 * Math.PI
-  const arcGrad = ctx.createLinearGradient(W / 2 - SR, SCY, W / 2 + SR, SCY)
-  arcGrad.addColorStop(0,   '#a855f7')
-  arcGrad.addColorStop(0.5, '#3b82f6')
-  arcGrad.addColorStop(1,   '#22c55e')
-  ctx.beginPath()
-  ctx.arc(W / 2, SCY, SR, -Math.PI / 2, -Math.PI / 2 + arcLen, false)
-  ctx.strokeStyle = arcGrad
-  ctx.lineWidth = 14
-  ctx.lineCap = 'round'
-  ctx.stroke()
-
-  // Score number
-  ctx.textBaseline = 'middle'
-  ctx.textAlign = 'center'
-  ctx.fillStyle = '#1e293b'
-  ctx.font = `bold 68px ${FONT}`
-  ctx.fillText(`${overall}%`, W / 2, SCY - 8)
-  ctx.fillStyle = '#94a3b8'
-  ctx.font = `bold 20px ${FONT}`
-  ctx.letterSpacing = '2px'
-  ctx.fillText(scoreLabel(overall).toUpperCase(), W / 2, SCY + 42)
-  ctx.letterSpacing = '0px'
-  ctx.textBaseline = 'alphabetic'
-
-  ctx.fillStyle = '#94a3b8'
-  ctx.font = `22px ${FONT}`
-  ctx.fillText('Overall Life Balance Score', W / 2, SCY + SR + 34)
-
-  // ── Section label
-  ctx.fillStyle = '#cbd5e1'
-  ctx.font = `bold 18px ${FONT}`
-  ctx.letterSpacing = '3px'
-  ctx.fillText('YOUR 6 LIFE AREAS', W / 2, 430)
-  ctx.letterSpacing = '0px'
-
-  // ── Area bars
-  const LABEL_W = 210
-  const BAR_X   = PAD + LABEL_W        // bar start X
-  const BAR_END  = W - PAD             // bar end X
-  const BAR_W    = BAR_END - BAR_X     // total bar width
-  const BAR_H    = 62
-  const BAR_GAP  = 14
-  const BAR_START_Y = 452
-
-  ORDER.forEach((key, i) => {
-    const m    = AREA_META[key]
-    const score = results.scores[key] ?? 0
-    const y    = BAR_START_Y + i * (BAR_H + BAR_GAP)
-    const fillW = Math.max(BAR_H, (score / 100) * BAR_W)   // min fill = pill radius × 2
-    const textInside = fillW > BAR_W * 0.82
-
-    // Area name label
-    ctx.textAlign = 'right'
-    ctx.textBaseline = 'middle'
-    ctx.fillStyle = '#334155'
-    ctx.font = `bold 28px ${FONT}`
-    ctx.fillText(m.name, PAD + LABEL_W - 18, y + BAR_H / 2)
-
-    // Background track
-    rrect(ctx, BAR_X, y, BAR_W, BAR_H, BAR_H / 2)
-    ctx.fillStyle = '#f1f5f9'
-    ctx.fill()
-
-    // Filled bar
-    rrect(ctx, BAR_X, y, fillW, BAR_H, BAR_H / 2)
-    const bGrad = ctx.createLinearGradient(BAR_X, 0, BAR_X + fillW, 0)
-    bGrad.addColorStop(0, m.hex + 'bb')
-    bGrad.addColorStop(1, m.hex)
-    ctx.fillStyle = bGrad
-    ctx.fill()
-
-    // Score text
-    ctx.textBaseline = 'middle'
-    if (textInside) {
-      ctx.fillStyle = '#ffffff'
-      ctx.font = `bold 26px ${FONT}`
-      ctx.textAlign = 'right'
-      ctx.fillText(`${score}%`, BAR_X + fillW - 18, y + BAR_H / 2)
-    } else {
-      ctx.fillStyle = m.hex
-      ctx.font = `bold 26px ${FONT}`
-      ctx.textAlign = 'left'
-      ctx.fillText(`${score}%`, BAR_X + fillW + 14, y + BAR_H / 2)
-    }
-  })
-
-  ctx.textBaseline = 'alphabetic'
-
-  // ── Priority badge strip at the bottom
-  const top2 = (results.priorities.slice(0, 2) as AreaKey[])
-  const BADGE_Y = BAR_START_Y + ORDER.length * (BAR_H + BAR_GAP) + 24
-
-  ctx.textAlign = 'center'
-  ctx.fillStyle = '#94a3b8'
-  ctx.font = `bold 18px ${FONT}`
-  ctx.letterSpacing = '2px'
-  ctx.fillText('TOP FOCUS AREAS', W / 2, BADGE_Y)
-  ctx.letterSpacing = '0px'
-
-  // Draw two colored badge pills
-  const BDGE_W = 280, BDGE_H = 52, BDGE_GAP = 20
-  const totalBadgeW = 2 * BDGE_W + BDGE_GAP
-  const bx0 = (W - totalBadgeW) / 2
-
-  top2.forEach((key, i) => {
-    const m = AREA_META[key]
-    const bx = bx0 + i * (BDGE_W + BDGE_GAP)
-    const by = BADGE_Y + 14
-
-    rrect(ctx, bx, by, BDGE_W, BDGE_H, BDGE_H / 2)
-    ctx.fillStyle = m.hex + '22'
-    ctx.fill()
-    rrect(ctx, bx, by, BDGE_W, BDGE_H, BDGE_H / 2)
-    ctx.strokeStyle = m.hex + '66'
-    ctx.lineWidth = 1.5
-    ctx.stroke()
-
-    // Dot
-    ctx.beginPath()
-    ctx.arc(bx + 28, by + BDGE_H / 2, 8, 0, 2 * Math.PI)
-    ctx.fillStyle = m.hex
-    ctx.fill()
-
-    // Label
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    ctx.fillStyle = m.hex
-    ctx.font = `bold 24px ${FONT}`
-    ctx.fillText(m.name, bx + BDGE_W / 2 + 8, by + BDGE_H / 2)
-  })
-
-  ctx.textBaseline = 'alphabetic'
-
-  // ── Footer
-  ctx.textAlign = 'center'
-  ctx.fillStyle = '#94a3b8'
-  ctx.font = `24px ${FONT}`
-  ctx.fillText('Take the free quiz at  radiantlifebalance.com', W / 2, H - 48)
-
-  // Bottom gradient stripe
-  const botStripe = ctx.createLinearGradient(0, 0, W, 0)
-  botStripe.addColorStop(0,   '#a855f7')
-  botStripe.addColorStop(0.5, '#3b82f6')
-  botStripe.addColorStop(1,   '#22c55e')
-  ctx.fillStyle = botStripe
-  ctx.fillRect(0, H - 16, W, 16)
-
-  // Export
+async function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
-    canvas.toBlob(
-      blob => (blob ? resolve(blob) : reject(new Error('Canvas export failed'))),
-      'image/png'
-    )
+    const image = new Image()
+    image.onload = () => resolve(image)
+    image.onerror = () => reject(new Error('Could not load the share image artwork. Please retry.'))
+    image.src = src
   })
+}
+
+export async function generateShareCard(results: QuizResults, includeGrowth = false): Promise<Blob> {
+  await document.fonts.ready
+  const font = typeof getComputedStyle === 'function' ? getComputedStyle(document.documentElement).getPropertyValue('--font-inter').trim() || 'Arial' : 'Arial'
+  const fontFamily = `${font}, sans-serif`
+  const summary = shareSummary(results, includeGrowth)
+  const [logo, strength, growth] = await Promise.all([
+    loadImage('/logo.png'), loadImage(`/icon-${summary.strongest}.png`),
+    includeGrowth ? loadImage(`/icon-${summary.growth}.png`) : Promise.resolve(null),
+  ])
+  const canvas = document.createElement('canvas')
+  canvas.width = canvas.height = 1080
+  const ctx = canvas.getContext('2d')
+  if (!ctx) throw new Error('This browser cannot create an image. Try another browser.')
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, 1080, 1080)
+  const gradient = ctx.createLinearGradient(0, 0, 1080, 0)
+  for (const [stop, color] of [[0, '#ef4444'], [0.2, '#f97316'], [0.4, '#eab308'], [0.6, '#22c55e'], [0.8, '#3b82f6'], [1, '#a855f7']] as [number,string][]) gradient.addColorStop(stop, color)
+  ctx.fillStyle = gradient; ctx.fillRect(0, 0, 1080, 12); ctx.fillRect(0, 1068, 1080, 12)
+  ctx.drawImage(logo, 470, 55, 140, 146)
+  ctx.textAlign = 'center'; ctx.fillStyle = '#334155'
+  ctx.font = `600 35px ${fontFamily}`; ctx.fillText('Radiant Life Balance', 540, 248)
+  ctx.font = `400 32px ${fontFamily}`; ctx.fillStyle = '#64748b'; ctx.fillText(summary.strengthLabel, 540, 325)
+  ctx.drawImage(strength, 430, 360, 220, 220)
+  ctx.fillStyle = '#0f172a'; ctx.font = `600 60px ${fontFamily}`; ctx.fillText(AREA_NAMES[summary.strongest], 540, 650)
+  ctx.fillStyle = '#7e22ce'; ctx.font = `700 76px ${fontFamily}`; ctx.fillText(`${summary.high}%`, 540, 742)
+  if (includeGrowth && growth) {
+    ctx.drawImage(growth, 245, 791, 74, 74)
+    ctx.textAlign = 'left'; ctx.fillStyle = '#64748b'; ctx.font = `400 23px ${fontFamily}`; ctx.fillText(summary.growthLabel, 340, 812)
+    ctx.fillStyle = '#334155'; ctx.font = `600 30px ${fontFamily}`; ctx.fillText(`${AREA_NAMES[summary.growth]} · ${summary.low}%`, 340, 854)
+  }
+  ctx.textAlign = 'center'; ctx.fillStyle = '#475569'; ctx.font = `400 30px ${fontFamily}`; ctx.fillText('What is your strongest area?', 540, 945)
+  ctx.font = `600 25px ${fontFamily}`; ctx.fillText('Take the free quiz · radiantlifebalance.com/quiz', 540, 996)
+  return new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Image export failed. Please retry.')), 'image/png'))
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
 interface Props {
   results: QuizResults
   variant?: 'default' | 'compact'
+  includeGrowth?: boolean
 }
 
-export function ShareImageButton({ results, variant = 'default' }: Props) {
+export function ShareImageButton({ results, variant = 'default', includeGrowth = false }: Props) {
+  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [imageBlob, setImageBlob] = useState<Blob | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [showPreview, setShowPreview] = useState(false)
 
   async function handleGenerate() {
+    setError('')
     setLoading(true)
     try {
-      const blob = await generateShareCard(results)
+      const blob = await generateShareCard(results, includeGrowth)
+      setImageBlob(blob)
       const url  = URL.createObjectURL(blob)
       setPreview(url)
       setShowPreview(true)
     } catch (err) {
-      console.error('Share card generation failed:', err)
+      setError(err instanceof Error ? err.message : 'Could not create the image. Please retry.')
     } finally {
       setLoading(false)
     }
@@ -294,12 +85,22 @@ export function ShareImageButton({ results, variant = 'default' }: Props) {
     a.href = preview
     a.download = 'my-life-balance-score.png'
     a.click()
+    trackEvent('share', {method: 'image_download'})
+  }
+
+  async function handleShareImage() {
+    if (!imageBlob) return
+    const file = new File([imageBlob], 'my-life-balance-summary.png', {type: 'image/png'})
+    if (!navigator.canShare?.({files: [file]})) { handleDownload(); return }
+    try {await navigator.share({files: [file], title: 'My Radiant Life Balance summary'}); trackEvent('share', {method: 'image_native'})}
+    catch (error) {if (!(error instanceof DOMException && error.name === 'AbortError')) setError('Image sharing is unavailable. Download the PNG instead.')}
   }
 
   function handleClose() {
     setShowPreview(false)
     if (preview) URL.revokeObjectURL(preview)
     setPreview(null)
+    setImageBlob(null)
   }
 
   const trigger = variant === 'compact' ? (
@@ -335,11 +136,12 @@ export function ShareImageButton({ results, variant = 'default' }: Props) {
   return (
     <>
       {trigger}
+      {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
 
       {/* Preview modal */}
       {showPreview && preview && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-          onClick={handleClose}>
+          role="dialog" aria-modal="true" aria-label="Your share image" onClick={handleClose}>
           <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-6 flex flex-col gap-5"
             onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
@@ -355,7 +157,7 @@ export function ShareImageButton({ results, variant = 'default' }: Props) {
 
             {/* Preview */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={preview} alt="Your Life Balance Score card" className="w-full rounded-2xl border border-slate-100 shadow-sm" />
+            <img src={preview} alt="Your strength-first Life Balance summary" className="w-full rounded-2xl border border-slate-100 shadow-sm" />
 
             <div className="flex gap-3">
               <button onClick={handleDownload}
@@ -364,6 +166,7 @@ export function ShareImageButton({ results, variant = 'default' }: Props) {
                 <ImageDown className="w-4 h-4" />
                 Download PNG
               </button>
+              <button onClick={handleShareImage} className="px-4 py-3 rounded-xl border border-purple-200 text-purple-700 text-sm font-medium">Share image</button>
               <button onClick={handleClose}
                 className="px-5 py-3 rounded-xl text-slate-500 font-medium text-sm border border-slate-200 hover:bg-slate-50 transition-colors">
                 Close

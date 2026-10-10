@@ -12,12 +12,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = areasData[area]
   if (!data) return {}
   return {
+    alternates: { canonical: `/${area}` },
     title: `${data.name} — ${data.tagline}`,
     description: data.description.slice(0, 160),
     openGraph: {
       title: `${data.name} — Radiant Life Balance`,
       description: data.tagline,
       type: 'website',
+      url: `/${area}`,
     },
     twitter: {
       card: 'summary_large_image',

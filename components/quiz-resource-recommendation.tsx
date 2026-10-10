@@ -20,6 +20,15 @@ export function QuizResourceRecommendation({ results, isDemo }: { results: QuizR
     } catch { /* Fall back to saved area scores. */ }
   }, [results, isDemo])
   const recommendation = recommendedQuizResource(results, answers)
+  useEffect(() => {
+    if (isDemo || !recommendation) return
+    try {
+      const key = `radiant_resource_view:${recommendation.product.id}`
+      if (sessionStorage.getItem(key)) return
+      sessionStorage.setItem(key, '1')
+      trackEvent('resource_view', {area: recommendation.area, product_id: recommendation.product.id})
+    } catch { /* Tracking must not interrupt results. */ }
+  }, [isDemo, recommendation?.area, recommendation?.product.id])
   if (!recommendation) return null
   const { area, product, focus, why, tiedQuestions, allQuestionsEqual, tiedAreas, basis } = recommendation
   const data = areasData[area]
@@ -42,7 +51,7 @@ export function QuizResourceRecommendation({ results, isDemo }: { results: QuizR
     {basis === 'scores' && !isDemo && <p className="mb-3 text-xs text-slate-500">Based on your saved area scores; your original question answers are unavailable in this browser.</p>}
     {isDemo && <p className="mb-4 text-sm text-purple-700">This uses sample scores. Take the free quiz to get your own recommendation.</p>}
     <div className="flex flex-wrap items-center gap-4">
-      <a href={product.affiliateUrl} target="_blank" rel="sponsored noopener noreferrer" onClick={() => trackEvent('affiliate_click')}
+      <a href={product.affiliateUrl} target="_blank" rel="sponsored noopener noreferrer" onClick={() => trackEvent('affiliate_click', {area, product_id: product.id})}
         className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white hover:bg-slate-700">
         View book & current price <ArrowUpRight className="h-4 w-4" />
       </a>

@@ -85,7 +85,7 @@ export function SubcategoryPageClient({ area, subcategory }: Props) {
             {subcategory.products.map((product, i) => {
               const tm = TYPE_META[product.type]
               return (
-                <motion.a key={product.id} href={product.affiliateUrl} onClick={() => trackEvent('affiliate_click')} target="_blank" rel="noopener noreferrer"
+                <motion.a key={product.id} href={product.affiliateUrl} onClick={() => trackEvent('affiliate_click', {area: area.key, product_id: product.id})} target="_blank" rel="sponsored noopener noreferrer"
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}
                   className="group block bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md rounded-xl p-5 transition-all">
                   <div className="flex items-start justify-between mb-3">
@@ -93,10 +93,10 @@ export function SubcategoryPageClient({ area, subcategory }: Props) {
                       style={{ background: tm.bg, color: tm.text, borderColor: tm.border }}>
                       {tm.label}
                     </span>
-                    <div className="flex items-center gap-1">
+                    {product.rating > 0 && (<div className="flex items-center gap-1">
                       <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                       <span className="text-slate-700 text-sm font-semibold">{product.rating}</span>
-                    </div>
+                    </div>)}
                   </div>
                   <h4 className="text-slate-900 font-semibold text-sm leading-snug mb-2 line-clamp-2">{product.name}</h4>
                   <p className="text-slate-400 text-xs leading-relaxed mb-4 line-clamp-2">{product.description}</p>

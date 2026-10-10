@@ -82,6 +82,8 @@ export async function POST(req: NextRequest) {
       cancel_url: `${site}/results`,
       'metadata[report_token]': token,
     })
+    const ref = (body as {ref?: unknown}).ref
+    if (typeof ref === 'string' && /^[a-zA-Z0-9_-]{1,40}$/.test(ref)) params.set('metadata[campaign_ref]', ref)
     if (coupon && allowedPromoId) {
       params.set('discounts[0][promotion_code]', allowedPromoId)
       params.set('metadata[report_test_promo_id]', allowedPromoId)

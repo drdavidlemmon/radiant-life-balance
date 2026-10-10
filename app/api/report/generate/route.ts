@@ -1,3 +1,4 @@
+import {recordReportMetric} from '@/lib/report-metrics'
 import { NextRequest, NextResponse } from 'next/server'
 import { redisCommand, redisReady } from '@/lib/redis'
 import { AREA_KEYS, isPremiumReport, isQuizResults, evidenceForOrder, productsForArea, resourcesForReport, hasValidRecommendations, type PremiumReport } from '@/lib/premium-report'
@@ -26,7 +27,7 @@ export async function POST(req: NextRequest) {
       headers: { Authorization: `Bearer ${stripeKey}` }, cache: 'no-store',
     })
     if (!stripe.ok) return NextResponse.json({ error: 'Could not verify payment.' }, { status: 502 })
-    const session = await stripe.json() as { status?: string; payment_status?: string; amount_subtotal?: number; amount_total?: number; currency?: string; total_details?: { amount_discount?: number }; discounts?: Array<{ promotion_code?: string }>; metadata?: { report_token?: string; report_test_promo_id?: string } }
+    const session = await stripe.json() as { status?: string; payment_status?: string; amount_subtotal?: number; amount_total?: number; currency?: string; total_details?: { amount_discount?: number }; discounts?: Array<{ promotion_code?: string }>; metadata?: { report_token?: string; report_test_promo_id?: string; campaign_ref?: string } }
     const regularPayment = session.payment_status === 'paid' && session.amount_total === 699
     const freeTest = Boolean(process.env.STRIPE_REPORT_TEST_PROMO_ID &&
       session.metadata?.report_test_promo_id === process.env.STRIPE_REPORT_TEST_PROMO_ID &&
@@ -38,6 +39,7 @@ export async function POST(req: NextRequest) {
     }
     const token = session.metadata?.report_token
     if (!token || !/^[0-9a-f-]{36}$/.test(token)) return NextResponse.json({ error: 'Report order not found.' }, { status: 404 })
+    await recordReportMetric('report_purchase', token, sessionId.startsWith('cs_live_') && regularPayment, session.metadata?.campaign_ref, session.amount_total)
     stage = 'reading saved report (Upstash)'
     const saved = await redisCommand<string | null>('GET', `report:input:${token}`)
     if (!saved) return NextResponse.json({ error: 'This report has expired. Please contact support.' }, { status: 410 })
@@ -54,6 +56,7 @@ export async function POST(req: NextRequest) {
     if (cached) {
       const report: unknown = JSON.parse(cached)
       if (isPremiumReport(report) && hasValidRecommendations(report, results.priorities[0])) {
+        await recordReportMetric('report_ready', token, sessionId.startsWith('cs_live_') && regularPayment, session.metadata?.campaign_ref)
         return NextResponse.json({ results, report, resources: resourcesForReport(report, results), evidence })
       }
     }
@@ -111,6 +114,7 @@ Existing affiliate catalog: ${JSON.stringify(catalog)}.`
     }
     stage = 'saving generated report (Upstash)'
     await redisCommand('SET', outputKey, JSON.stringify(report), 'EX', 60 * 60 * 24 * 30)
+    await recordReportMetric('report_ready', token, sessionId.startsWith('cs_live_') && regularPayment, session.metadata?.campaign_ref)
     return NextResponse.json({ results, report, resources: resourcesForReport(report, results), evidence })
     } finally {
       await redisCommand('DEL', `report:generating:${token}`).catch(() => {})

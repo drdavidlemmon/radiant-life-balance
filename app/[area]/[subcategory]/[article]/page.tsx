@@ -35,6 +35,8 @@ export async function generateMetadata({ params }: { params: Promise<Params> }) 
   return {
     title: `${art.title} | ${areaData.name} | Radiant Life Balance`,
     description: art.excerpt,
+    alternates: { canonical: `/${area}/${subcategory}/${articleId}` },
+    openGraph: { title: art.title, description: art.excerpt, type: "article", url: `/${area}/${subcategory}/${articleId}` },
   }
 }
 

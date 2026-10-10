@@ -191,10 +191,10 @@ export default function ResultsPage() {
 
         <QuizResourceRecommendation results={results} isDemo={isDemo} />
 
+        <div className="mb-8"><ShareResultsPanel results={results} /></div>
         <Suspense fallback={null}>
           <PremiumReportOffer results={results} isDemo={isDemo} />
         </Suspense>
-        <div className="mb-8"><ShareResultsPanel results={results} /></div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
           <motion.div initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}

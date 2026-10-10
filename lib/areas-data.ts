@@ -80,6 +80,7 @@ export const areasData: Record<string, AreaData> = {
           { text: 'Concentrate all your thoughts upon the work at hand. The sun\'s rays do not burn until brought to a focus.', author: 'Alexander Graham Bell' },
         ],
         products: [
+          {"id": "stressp1", "name": "The Upside of Stress — Kelly McGonigal", "type": "book", "description": "An educational exploration of stress, mindset, and resilience, with reflection exercises for everyday challenges.", "price": "Check current price", "affiliateUrl": "https://www.amazon.com/dp/1101982934?tag=radiantlifeba-20", "rating": 0},
           { id: 'fp1', name: 'Deep Work: Rules for Focused Success in a Distracted World', type: 'book', description: "Cal Newport's masterpiece on the power of concentrated focus and how to cultivate it deliberately in our age of endless distraction.", price: '$17.99', affiliateUrl: 'https://amzn.to/4wkqEqt', rating: 4.8 },
           { id: 'fp2', name: 'Focus Factor Brain Health Supplement', type: 'supplement', description: "America's #1 selling brain health supplement — supports memory, concentration, and focus with a clinically studied formula containing 40 key nutrients.", price: '$29.99', affiliateUrl: 'https://amzn.to/3RNXZLj', rating: 4.1 },
           { id: 'fp3', name: 'Indistractable: How to Control Your Attention and Choose Your Life', type: 'book', description: "Nir Eyal's practical framework for beating distraction — identifying internal triggers, hacking back external ones, and building the psychological muscle of sustained focus.", price: '$16.99', affiliateUrl: 'https://www.amazon.com/Indistractable-Control-Your-Attention-Choose/dp/194883653X?_encoding=UTF8&dib_tag=se&dib=eyJ2IjoiMSJ9.aUI1qyZWzddZCDoFa9ilDb8ko74OAQO3Exy3JIDhLui0hJrRSAGIVw8tN8aQSHgqjPBTnOBkP1Vi47JsZlh2yqpDNCTpX5itHFvBaxE5NH_RDf9Wyex74G665BQ2d90PaN5TbLBevrkBD48Pxb9imEE-K2R1OPjMu_IGcC3KwAoWTh-1Fhtj16pu5aL3q4gUMui2doGKVMSRMo3SvyK1hk0QLq63_IHiqGTpo0EzM9c.OoJfVVST5i_jpUDa6aQOnuEN4hbGVYGTukL8Ta2DC2Q&qid=1789667308&sr=8-1&linkCode=ll2&tag=radiantlifeba-20&linkId=3543b691eb53e542dcde0bdc999e47af&language=en_US&gaOptInStatus=true&ref_=as_li_ss_tl', rating: 4.6 },
@@ -307,6 +308,7 @@ export const areasData: Record<string, AreaData> = {
           { text: 'You have power over your mind — not outside events. Realize this, and you will find strength.', author: 'Marcus Aurelius' },
         ],
         products: [
+          {"id": "forgivep1", "name": "The Book of Forgiving — Desmond Tutu & Mpho Tutu", "type": "book", "description": "A four-part framework for reflecting on forgiveness, naming hurt, and deciding whether to renew or release a relationship. Forgiveness does not require staying in an unsafe situation.", "price": "Check current price", "affiliateUrl": "https://www.amazon.com/s?k=The+Book+of+Forgiving+Desmond+Tutu&tag=radiantlifeba-20", "rating": 0},
           { id: 'ipp1', name: 'The Power of Now: A Guide to Spiritual Enlightenment', type: 'book', description: "Eckhart Tolle's transformational guide to living in the present moment and freeing yourself from the relentless tyranny of the thinking mind. A modern spiritual masterpiece.", price: '$15.99', affiliateUrl: 'https://amzn.to/4vOPo95', rating: 4.7 },
           { id: 'ipp2', name: 'Meditations by Marcus Aurelius', type: 'book', description: "The private reflections of Rome's philosopher-emperor — written for himself, not for publication — remain the most practical guide to inner peace ever written.", price: '$9.99', affiliateUrl: 'https://amzn.to/3RwJhYP', rating: 4.9 },
         ],
@@ -325,6 +327,7 @@ export const areasData: Record<string, AreaData> = {
           { text: 'Your sacred space is where you can find yourself over and over again.', author: 'Joseph Campbell' },
         ],
         products: [
+          {"id": "kindp1", "name": "The Power of Kindness — Piero Ferrucci", "type": "book", "description": "Reflection and exercises on generosity, empathy, and bringing kindness into daily life.", "price": "Check current price", "affiliateUrl": "https://www.amazon.com/dp/0143129279?tag=radiantlifeba-20", "rating": 0},
           { id: 'spp1', name: 'The Untethered Soul: The Journey Beyond Yourself', type: 'book', description: "Michael Singer's profound exploration of consciousness, spiritual awakening, and the path to inner freedom — one of the most beloved spiritual books of the modern era.", price: '$16.99', affiliateUrl: 'https://amzn.to/4wlBxZ1', rating: 4.8 },
         ],
       },
@@ -359,6 +362,7 @@ export const areasData: Record<string, AreaData> = {
           { text: 'A great marriage is not when the "perfect couple" comes together. It is when an imperfect couple learns to enjoy their differences.', author: 'Dave Meurer' },
         ],
         products: [
+          {"id": "intimacyp1", "name": "Sexual Intelligence — Marty Klein", "type": "book", "description": "An adult educational resource exploring communication, expectations, and sexual satisfaction. Consider it only if sexual intimacy is something you want to explore.", "price": "Check current price", "affiliateUrl": "https://www.amazon.com/s?k=Sexual+Intelligence+Marty+Klein&tag=radiantlifeba-20", "rating": 0},
           { id: 'romp1', name: 'The Seven Principles for Making Marriage Work', type: 'book', description: "John Gottman's research-based guide to building a lasting, fulfilling partnership — backed by 40 years of scientific study of thousands of couples.", price: '$17.00', affiliateUrl: 'https://amzn.to/4bYwd5u', rating: 4.8 },
           { id: 'romp2', name: 'Hold Me Tight: Seven Conversations for a Lifetime of Love', type: 'book', description: "Dr. Sue Johnson's emotionally focused couples therapy transformed into a powerful self-help guide for understanding and deepening your romantic bond.", price: '$16.99', affiliateUrl: 'https://amzn.to/4fsBXWg', rating: 4.7 },
         ],

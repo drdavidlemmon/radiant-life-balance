@@ -1,4 +1,6 @@
 'use client'
+
+import {referralCode, trackEvent} from '@/lib/analytics'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -106,9 +108,10 @@ export function PremiumReportOffer({ results, isDemo }: { results: QuizResults; 
         const raw = localStorage.getItem(`deepDiveResults_${area}`)
         return [area, raw ? JSON.parse(raw) : null]
       }))
-      const res = await fetch('/api/report/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ results, answers, deepDives, intake, coupon: coupon.trim() }) })
+      const res = await fetch('/api/report/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ results, answers, deepDives, intake, coupon: coupon.trim(), ref: referralCode() }) })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Could not start checkout')
+      trackEvent('checkout_start')
       window.location.assign(data.url)
     } catch (error) { setStatus(error instanceof Error ? error.message : 'Checkout unavailable'); setBusy(false) }
   }

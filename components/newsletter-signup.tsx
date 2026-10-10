@@ -27,6 +27,7 @@ export function NewsletterSignup({
 }: NewsletterSignupProps) {
   const [email, setEmail] = useState('')
   const [selected, setSelected] = useState<Set<AreaKey>>(new Set(defaultChecked))
+  const [sequenceEnrolled, setSequenceEnrolled] = useState(false)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
 
@@ -61,6 +62,7 @@ export function NewsletterSignup({
         return
       }
 
+      setSequenceEnrolled(data.sequenceEnrolled === true)
       setStatus('success')
     } catch {
       setStatus('error')
@@ -80,7 +82,7 @@ export function NewsletterSignup({
         </div>
         <h3 className="text-lg font-bold text-slate-900 mb-1">You&apos;re subscribed!</h3>
         <p className="text-slate-500 text-sm">
-          Check your inbox — personalized content for your selected areas is on its way.
+          {sequenceEnrolled ? 'You are enrolled in the welcome series. Watch your inbox for the first email.' : 'Your email and selected interests have been saved. Explore the free resources while you are here.'}
         </p>
       </motion.div>
     )

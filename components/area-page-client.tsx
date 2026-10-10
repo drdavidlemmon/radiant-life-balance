@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowRight, ArrowLeft, Star, ExternalLink, Clock, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
+import {areaPhotographs} from '@/lib/brand-photography'
 import { AreaData, QuizResults, Product } from '@/types'
 import { trackEvent } from '@/lib/analytics'
 
@@ -66,6 +67,10 @@ export function AreaPageClient({ area }: Props) {
               <p className="text-slate-600 text-lg font-medium mb-2">{area.tagline}</p>
               <p className="text-slate-500 text-sm max-w-2xl leading-relaxed">{area.description}</p>
             </div>
+            {areaPhotographs[area.key] && <figure className="w-full md:w-72 shrink-0">
+              <Image src={areaPhotographs[area.key]!.src} alt={areaPhotographs[area.key]!.alt} width={576} height={432} className="rounded-2xl object-cover aspect-[4/3] w-full" />
+              {areaPhotographs[area.key]!.credit && <figcaption className="text-xs text-slate-400 mt-2">{areaPhotographs[area.key]!.credit}</figcaption>}
+            </figure>}
             {score === null && (
               <Link href="/quiz" className="inline-flex items-center gap-2 border border-slate-200 bg-white text-slate-700 px-5 py-3 rounded-xl text-sm font-medium hover:bg-white transition-colors shadow-sm">
                 Take Quiz to Get Your Score <ArrowRight className="w-4 h-4" />
@@ -131,7 +136,7 @@ export function AreaPageClient({ area }: Props) {
             {allProducts.map((product, i) => {
               const tm = TYPE_META[product.type]
               return (
-                <motion.a key={product.id} href={product.affiliateUrl} onClick={() => trackEvent('affiliate_click')} target="_blank" rel="noopener noreferrer"
+                <motion.a key={product.id} href={product.affiliateUrl} onClick={() => trackEvent('affiliate_click', {area: area.key, product_id: product.id})} target="_blank" rel="sponsored noopener noreferrer"
                   initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }} viewport={{ once: true }}
                   className="group block bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md rounded-xl p-5 transition-all duration-200">
                   <div className="flex items-start justify-between mb-3">
@@ -139,10 +144,10 @@ export function AreaPageClient({ area }: Props) {
                       style={{ background: tm.bg, color: tm.text, borderColor: tm.border }}>
                       {tm.label}
                     </span>
-                    <div className="flex items-center gap-1 text-amber-500">
+                    {product.rating > 0 && (<div className="flex items-center gap-1 text-amber-500">
                       <Star className="w-3.5 h-3.5 fill-current" />
                       <span className="text-sm font-semibold text-slate-700">{product.rating}</span>
-                    </div>
+                    </div>)}
                   </div>
                   <h4 className="text-slate-900 font-semibold text-sm leading-snug mb-2 line-clamp-2">{product.name}</h4>
                   <p className="text-slate-400 text-xs leading-relaxed mb-4 line-clamp-2">{product.description}</p>

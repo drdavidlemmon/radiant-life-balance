@@ -1,8 +1,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import {creatorPortrait} from '@/lib/brand-photography'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  alternates: { canonical: '/about' },
   title: 'About | Radiant Life Balance',
   description: 'Meet Dr. David Lemmon, and learn the story behind the Radiant Life Balance assessment.',
 }
@@ -49,6 +51,7 @@ export default function AboutPage() {
           <h2 className="text-xl font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">
             Meet Dr. David Lemmon
           </h2>
+          {creatorPortrait && <Image src={creatorPortrait.src} alt={creatorPortrait.alt} width={320} height={400} className="rounded-2xl object-cover mb-6" />}
           <div className="space-y-4 text-slate-600 text-sm leading-relaxed">
             <p>
               Dr. David Lemmon is a licensed naturopathic doctor with a holistic approach to health and
