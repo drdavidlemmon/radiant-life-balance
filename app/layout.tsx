@@ -27,6 +27,13 @@ export const metadata: Metadata = {
   authors: [{ name: 'Dr. David Lemmon' }],
   creator: 'Dr. David Lemmon',
   publisher: 'Radiant Life Balance',
+  icons: {
+    icon: [
+      { url: '/favicon.ico?v=rainbow-1', sizes: '16x16 32x32 48x48 64x64', type: 'image/x-icon' },
+      { url: '/icon.png?v=rainbow-1', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: { url: '/apple-icon.png?v=rainbow-1', sizes: '180x180', type: 'image/png' },
+  },
   openGraph: {
     type: 'website',
     siteName: 'Radiant Life Balance',
