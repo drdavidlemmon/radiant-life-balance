@@ -59,6 +59,7 @@ export function Footer() {
             {[
               { href: '/quiz',       label: 'Take the Assessment' },
               { href: '/results',    label: 'View My Results' },
+              { href: '/challenge',  label: '30-Day Challenge Checklist' },
               { href: '/#introduction', label: 'Introduction' },
               { href: '/about',      label: 'About' },
               { href: '/disclaimer', label: 'Disclaimer' },
