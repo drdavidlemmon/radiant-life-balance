@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
@@ -33,6 +33,13 @@ export default function DeepDivePage() {
   const [current, setCurrent] = useState(0)
   const [answers, setAnswers] = useState<Record<string, number>>({})
   const [chosen, setChosen] = useState<number | null>(null)
+  const advancingRef = useRef(false)
+  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => () => {
+    if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current)
+  }, [])
+
   const [direction, setDirection] = useState<'forward' | 'back'>('forward')
 
   const areaRecord = areasData[areaKey]
@@ -51,17 +58,28 @@ export default function DeepDivePage() {
     (s) => s.id === q.subcategory
   )?.name ?? q.subcategory
 
+  function handleBack() {
+    if (current === 0) return
+    if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current)
+    advancingRef.current = false
+    setChosen(null)
+    setDirection('back')
+    setCurrent(c => c - 1)
+  }
+
   function handleSelect(val: number) {
-    if (chosen !== null) return
+    if (advancingRef.current) return
+    advancingRef.current = true
     setChosen(val)
-    setTimeout(() => {
-      const updated = { ...answers, [q.id]: val }
-      setAnswers(updated)
+    const updated = { ...answers, [q.id]: val }
+    setAnswers(updated)
+    advanceTimerRef.current = setTimeout(() => {
 
       if (current + 1 < total) {
         setDirection('forward')
         setCurrent(c => c + 1)
         setChosen(null)
+        advancingRef.current = false
       } else {
         // compute subcategory scores
         const subScores: Record<string, { total: number; count: number }> = {}
@@ -95,10 +113,14 @@ export default function DeepDivePage() {
       <div className="border-b border-gray-100 bg-white sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
           <button
-            onClick={() => router.back()}
+            type="button"
+            onClick={() => {
+              if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current)
+              router.back()
+            }}
             className="text-sm text-gray-500 hover:text-gray-800 transition-colors"
           >
-            ← Back
+            ← Exit quiz
           </button>
           <div className="flex items-center gap-2">
             <Image src={meta.icon} alt="" width={32} height={32} className="h-8 w-8 rounded-full object-contain" />
@@ -150,7 +172,7 @@ export default function DeepDivePage() {
 
               <div role="group" aria-labelledby="deep-dive-question" className="grid grid-cols-5 gap-1.5 sm:gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-2 sm:p-5">
                 {OPTS.map(opt => {
-                  const isSelected = chosen === opt.value
+                  const isSelected = (chosen ?? answers[q.id]) === opt.value
                   return (
                     <motion.button key={opt.value} type="button" onClick={() => handleSelect(opt.value)}
                       disabled={chosen !== null} aria-label={`${opt.value}: ${opt.label}`} aria-pressed={isSelected}
@@ -172,12 +194,23 @@ export default function DeepDivePage() {
               </div>
             </motion.div>
           </AnimatePresence>
+          <div className="mt-6 flex items-center justify-between gap-4">
+            <button type="button" onClick={handleBack} disabled={current === 0}
+              className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-default">
+              ← Back
+            </button>
+            <button type="button" onClick={() => { if (answers[q.id] !== undefined) handleSelect(answers[q.id]) }}
+              disabled={answers[q.id] === undefined || chosen !== null}
+              className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-default">
+              {current === total - 1 ? 'See results' : 'Next →'}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Footer hint */}
       <div className="text-center pb-8 text-sm text-gray-400">
-        Select an answer to advance automatically
+        Select an answer to advance. Use Back to review or change an answer.
       </div>
     </div>
   )

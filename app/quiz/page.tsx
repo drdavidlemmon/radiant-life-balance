@@ -62,6 +62,18 @@ export default function QuizPage() {
   const [current, setCurrent] = useState(0)
   const [completing, setCompleting] = useState(false)
   const advancingRef = useRef(false)
+  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => () => {
+    if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current)
+  }, [])
+
+  function handleBack() {
+    if (current === 0 || completing) return
+    if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current)
+    advancingRef.current = false
+    setCurrent(c => c - 1)
+  }
 
   useEffect(() => {
     try {
@@ -101,7 +113,7 @@ export default function QuizPage() {
       ? current + 1
       : quizQuestions.findIndex(question => newAnswers[question.id] === undefined)
     if (nextQuestion >= 0) {
-      setTimeout(() => {
+      advanceTimerRef.current = setTimeout(() => {
         setCurrent(nextQuestion)
         advancingRef.current = false
       }, 280)
@@ -111,7 +123,7 @@ export default function QuizPage() {
     const results = calculateResults(newAnswers)
     localStorage.setItem('lifebalance_results', JSON.stringify(results))
     trackEvent('quiz_complete')
-    setTimeout(() => router.push('/results'), 1800)
+    advanceTimerRef.current = setTimeout(() => router.push('/results'), 1800)
   }, [answers, completing, current, q, total, router])
 
   if (completing) {
@@ -139,9 +151,9 @@ export default function QuizPage() {
       <div className="fixed top-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-4">
           {current > 0 && (
-            <button onClick={() => setCurrent((c) => c - 1)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors flex-shrink-0">
-              <ChevronLeft className="w-5 h-5" />
+            <button type="button" onClick={handleBack} aria-label="Back to previous question"
+              className="flex items-center gap-1 p-1.5 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors flex-shrink-0">
+              <ChevronLeft className="w-5 h-5" /> Back
             </button>
           )}
           <div className="flex-1">
@@ -211,7 +223,18 @@ export default function QuizPage() {
             </div>
           </motion.div>
         </AnimatePresence>
-        <p className="text-center text-slate-400 text-xs mt-8">Question {current + 1} of {total}</p>
+        <div className="mt-6 flex items-center justify-between gap-4">
+          <button type="button" onClick={handleBack} disabled={current === 0}
+            className="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-default">
+            <ChevronLeft className="h-4 w-4" /> Back
+          </button>
+          <button type="button" onClick={() => { if (answered !== undefined) handleAnswer(answered) }}
+            disabled={answered === undefined || advancingRef.current}
+            className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-default">
+            {current === total - 1 ? 'See results' : 'Next →'}
+          </button>
+        </div>
+        <p className="text-center text-slate-400 text-xs mt-4">Question {current + 1} of {total}</p>
       </div>
     </div>
   )
