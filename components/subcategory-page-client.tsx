@@ -60,6 +60,16 @@ export function SubcategoryPageClient({ area, subcategory }: Props) {
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-12">
+        {area.key === 'body' && subcategory.id === 'specific-conditions' && (
+          <aside className="mb-8 rounded-2xl border border-green-100 bg-green-50/50 p-6">
+            <p className="text-xs font-semibold uppercase tracking-widest text-green-700 mb-2">Cancer support resource</p>
+            <h2 className="text-xl font-semibold text-slate-900 mb-2">Rediscover Health Natural Medicine</h2>
+            <p className="text-sm text-slate-600 leading-relaxed max-w-2xl mb-4">Explore cancer education and integrative support with Dr. David Lemmon, the creator of Radiant Life Balance.</p>
+            <a href="https://www.rediscoverhealthnaturalmedicine.com/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-semibold text-green-800 hover:text-green-950 underline underline-offset-4">
+              Explore cancer support <ExternalLink className="w-4 h-4" aria-hidden="true" />
+            </a>
+          </aside>
+        )}
         {tab === 'articles' && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {subcategory.articles.map((article, i) => (

@@ -68,7 +68,7 @@ export function AreaPageClient({ area }: Props) {
               <p className="text-slate-500 text-sm max-w-2xl leading-relaxed">{area.description}</p>
             </div>
             {areaPhotographs[area.key] && <figure className="w-full md:w-72 shrink-0">
-              <Image src={areaPhotographs[area.key]!.src} alt={areaPhotographs[area.key]!.alt} width={576} height={432} className="rounded-2xl object-cover aspect-[4/3] w-full" />
+              <Image src={areaPhotographs[area.key]!.src} alt={areaPhotographs[area.key]!.alt} width={576} height={432} sizes="(min-width: 768px) 288px, calc(100vw - 32px)" className="rounded-2xl object-cover aspect-[4/3] w-full" />
               {areaPhotographs[area.key]!.credit && <figcaption className="text-xs text-slate-400 mt-2">{areaPhotographs[area.key]!.credit}</figcaption>}
             </figure>}
             {score === null && (
